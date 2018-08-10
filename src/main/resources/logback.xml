@@ -20,6 +20,8 @@
 	<!-- <property name="log.pattern" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%level] 
 		[%thread] [%logger{50}] >>> %msg%n" /> -->
 	<property name="log.async.queue.size" value="1024" />
+	<property name="timestampFormat"
+		value="yyyy-MM-dd HH:mm:ss.SSS" />
 
 	<contextName>${log.context.name}</contextName>
 
@@ -165,9 +167,33 @@
 		</encoder>
 	</appender>
 
+	<appender name="JSON"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
+			<jsonFormatter
+				class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter">
+				<prettyPrint>true</prettyPrint>
+			</jsonFormatter>
+			<timestampFormat>${timestampFormat}</timestampFormat>
+		</layout>
+	</appender>
+
 	<logger
 		name="org.springframework.aop.interceptor.PerformanceMonitorInterceptor"
-		level="INFO" additivity="false">
+		level="TRACE" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger
+		name="com.share.lifetime.interceptor.PerformanceMonitorInterceptor"
+		level="TRACE" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger
+		name="com.share.lifetime.interceptor.PerformanceMonitorInterceptor"
+		level="TRACE" additivity="false">
+		<appender-ref ref="STDOUT" />
 	</logger>
 
 	<logger name="druid.sql.DataSource" level="DEBUG"
@@ -204,6 +230,7 @@
 
 	<root level="INFO">
 		<appender-ref ref="STDOUT" />
+		<!-- <appender-ref ref="JSON" /> -->
 		<appender-ref ref="NORMALLOG-APPENDER" />
 		<appender-ref ref="RollingFileInfo" />
 		<appender-ref ref="RollingFileWarn" />

@@ -16,6 +16,18 @@
 	<context:component-scan
 		base-package="com.share.lifetime.controller" />
 
+	<mvc:resources mapping="/static/js/**" location="/js/" />
+	<mvc:resources mapping="/static/css/**" location="/css/" />
+	<mvc:resources mapping="/static/lib/**" location="/lib/" />
+	<mvc:resources mapping="/static/image/**"
+		location="/image/" />
+	<mvc:resources location="classpath:/META-INF/resources/"
+		mapping="swagger-ui.html"></mvc:resources>
+	<mvc:resources
+		location="classpath:/META-INF/resources/webjars/"
+		mapping="/webjars/**"></mvc:resources>
+
+
 	<mvc:annotation-driven validator="validator">
 		<mvc:message-converters>
 			<bean
