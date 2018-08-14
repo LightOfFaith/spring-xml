@@ -3,5 +3,9 @@
 /.project
 /.settings/
 
+# sts ignore
+/.springBeans
+
 # maven ignore
 /target/
+
