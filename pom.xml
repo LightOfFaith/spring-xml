@@ -198,8 +198,26 @@
 
 	</dependencies>
 	<build>
-		<finalName>spring-xml</finalName>
+		<!-- http://maven.apache.org/pom.html -->
+		<directory>${project.basedir}/target</directory>
+		<outputDirectory>${project.build.directory}/classes</outputDirectory>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<testOutputDirectory>${project.build.directory}/test-classes</testOutputDirectory>
+		<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
+		<scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
+		<testSourceDirectory>${project.basedir}/src/test/java</testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>${project.basedir}/src/main/resources</directory>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>${project.basedir}/src/test/resources</directory>
+			</testResource>
+		</testResources>
 		<plugins>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -209,25 +227,15 @@
 					<target>${java.version}</target>
 					<testSource>${java.version}</testSource>
 					<testTarget>${java.version}</testTarget>
+					<encoding>UTF-8</encoding>
+					<skip>true</skip>
+					<verbose>true</verbose>
+					<compilerArguments>
+						<extdirs>${project.basedir}/src/main/webapp/WEB-INF/lib</extdirs>
+					</compilerArguments>
 				</configuration>
 			</plugin>
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<version>${maven-war-plugin.version}</version>
-				<configuration>
-					<packagingIncludes>WEB-INF/lib/*.jar</packagingIncludes>
-					<!-- <webResources>
-						<webResource>
-							<directory>config</directory>
-							<filtering>true</filtering>
-							<include>**/*.properties</include>
-							<targetPath>WEB-INF</targetPath>
-						</webResource>
-					</webResources> -->
-				</configuration>
-			</plugin>
 		</plugins>
 	</build>
 </project>
