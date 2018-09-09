@@ -1,8 +1,166 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+	<beans profile="test">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath:config/test/db.properties" />
+	</beans>
+	<beans profile="dev">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath:config/dev/db.properties" />
+	</beans>
+	<beans profile="pro">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath:config/pro/db.properties" />
+	</beans>
+
+	<beans profile="test,dev,pro">
+
+		<context:component-scan
+			base-package="com.share.lifetime">
+			<context:exclude-filter type="annotation"
+				expression="org.springframework.stereotype.Controller" />
+		</context:component-scan>
+
+		<!-- https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE -->
+		<bean id="dataSource"
+			class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+			destroy-method="close">
+			<!-- https://github.com/alibaba/druid/wiki/DruidDataSource%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7%E5%88%97%E8%A1%A8 -->
+			<!-- 基本属性 url、user、password -->
+			<property name="url" value="${jdbc.url}" />
+			<property name="username" value="${jdbc.username}" />
+			<property name="password" value="${jdbc.password}" />
+			<!-- 配置初始化大小、最小、最大 -->
+			<property name="initialSize" value="${jdbc.initialSize}" />
+			<property name="minIdle" value="${jdbc.minIdle}" />
+			<property name="maxActive" value="${jdbc.maxActive}" />
+			<!-- 配置获取连接等待超时的时间 -->
+			<property name="maxWait" value="${jdbc.maxWait}" />
+			<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+			<property name="timeBetweenEvictionRunsMillis"
+				value="${jdbc.timeBetweenEvictionRunsMillis}" />
+			<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+			<property name="minEvictableIdleTimeMillis"
+				value="${jdbc.minEvictableIdleTimeMillis}" />
+			<property name="maxEvictableIdleTimeMillis"
+				value="${jdbc.maxEvictableIdleTimeMillis}" />
+
+			<property name="testWhileIdle" value="${jdbc.testWhileIdle}" />
+			<property name="testOnBorrow" value="${jdbc.testOnBorrow}" />
+			<property name="testOnReturn" value="${jdbc.testOnReturn}" />
+
+			<property name="poolPreparedStatements"
+				value="${jdbc.poolPreparedStatements}" />
+			<property name="maxPoolPreparedStatementPerConnectionSize"
+				value="${jdbc.maxPoolPreparedStatementPerConnectionSize}" />
+			<!-- asyncInit是1.1.4中新增加的配置，如果有initialSize数量较多时，打开会加快应用启动时间 -->
+			<property name="asyncInit" value="true" />
+			<!-- 配置监控统计拦截的filters -->
+			<property name="filters" value="${jdbc.filters}" />
+			<!-- https://github.com/alibaba/druid/wiki/%E4%BD%BF%E7%94%A8ConfigFilter -->
+			<property name="connectionProperties"
+				value="config.decrypt=true;config.decrypt.key=${publickey}" />
+			<property name="proxyFilters">
+				<list>
+					<ref bean="stat-filter" />
+					<ref bean="log-filter" />
+				</list>
+			</property>
+			<!-- 连接泄漏监测 https://github.com/alibaba/druid/wiki/%E8%BF%9E%E6%8E%A5%E6%B3%84%E6%BC%8F%E7%9B%91%E6%B5%8B -->
+			<property name="removeAbandoned" value="true" /> <!-- 打开removeAbandoned功能 -->
+			<property name="removeAbandonedTimeout" value="1800" /> <!-- 1800秒，也就是30分钟 -->
+			<property name="logAbandoned" value="true" /> <!-- 关闭abanded连接时输出错误日志 -->
+
+		</bean>
+		<!-- https://github.com/alibaba/druid/wiki/%E9%85%8D%E7%BD%AE_StatFilter -->
+		<!-- Druid内置提供一个StatFilter，用于统计监控信息。 -->
+		<bean id="stat-filter"
+			class="com.alibaba.druid.filter.stat.StatFilter">
+			<property name="slowSqlMillis" value="10000" />
+			<property name="logSlowSql" value="true" />
+		</bean>
+		<bean id="log-filter"
+			class="com.alibaba.druid.filter.logging.Log4jFilter">
+			<property name="resultSetLogEnabled" value="false" />
+		</bean>
+
+		<!-- http://www.mybatis.org/spring/zh/index.html -->
+		<bean id="sqlSessionFactory"
+			class="org.mybatis.spring.SqlSessionFactoryBean">
+			<property name="dataSource" ref="dataSource" />
+			<property name="typeAliasesPackage"
+				value="com.share.lifetime.entity"></property>
+			<!-- <property name="mapperLocations" value="classpath:config/mappers/**/*Mapper.xml" 
+				/> -->
+		</bean>
+
+		<!-- Spring 的 事 务 处 理 -->
+		<bean id="transactionManager"
+			class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+			<property name="dataSource" ref="dataSource" />
+		</bean>
+
+		<tx:advice id="txAdvice"
+			transaction-manager="transactionManager">
+			<tx:attributes>
+				<tx:method name="get*" read-only="true"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="list*" read-only="true"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="count*" read-only="true"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="save*" read-only="false"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="insert*" read-only="false"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="remove*" read-only="false"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="delete*" read-only="false"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="update*" read-only="false"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="add*" read-only="false"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="del*" read-only="false"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="modify*" read-only="false"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="select*" read-only="true"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="*" />
+			</tx:attributes>
+		</tx:advice>
+
+		<aop:config>
+			<aop:pointcut
+				expression="execution(* com.share.lifetime..*Service.*(..))"
+				id="service" />
+			<aop:advisor advice-ref="txAdvice" pointcut-ref="service" />
+		</aop:config>
 
 
+		<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			<!-- 为映射器接口文件设置基本的包路径。 你可以使用分号或逗号 作为分隔符设置多于一个的包路径。每个映射器将会在指定的包路径中递归地被搜索到。 -->
+			<property name="basePackage"
+				value="com.share.lifetime.repository" />
+			<property name="sqlSessionFactoryBeanName"
+				value="sqlSessionFactory" />
+			<!-- 指定了要寻找的注解名称 -->
+			<property name="annotationClass"
+				value="org.springframework.stereotype.Repository" />
+		</bean>
+	</beans>
 
 </beans>
