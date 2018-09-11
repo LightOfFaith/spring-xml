@@ -32,7 +32,7 @@ public class SignatureUtils {
 		for (int i = 0; i < keys.size(); i++) {
 			String key = keys.get(i);
 			String value = sortedParams.get(key);
-			if (StringUtils.isNoneBlank(key, value)) {
+			if (org.apache.commons.lang3.StringUtils.isNoneBlank(key, value)) {
 				content.append((i == 0 ? "" : "&") + key + "=" + value);
 			}
 		}
