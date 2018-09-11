@@ -25,27 +25,24 @@ public class SignatureUtils {
 		return sortedParams;
 	}
 
-	public static String getSignContent(Map<String, String> sortedParams) {
+	public static String getSignContentV1(Map<String, String> sortedParams) {
 		StringBuffer content = new StringBuffer();
 		List<String> keys = new ArrayList<String>(sortedParams.keySet());
 		Collections.sort(keys);
-		int index = 0;
 		for (int i = 0; i < keys.size(); i++) {
 			String key = keys.get(i);
 			String value = sortedParams.get(key);
-			if (org.apache.commons.lang3.StringUtils.isNoneBlank(key, value)) {
-				content.append((index == 0 ? "" : "&") + key + "=" + value);
-				index++;
+			if (StringUtils.isNoneBlank(key, value)) {
+				content.append((i == 0 ? "" : "&") + key + "=" + value);
 			}
 		}
 		return content.toString();
 	}
 
-	public static String getSignCheckContentV1(Map<String, String> params) {
+	public static String getSignContentV3(Map<String, String> params) {
 		if (params == null) {
 			return null;
 		}
-
 		params.remove(SIGN);
 		params.remove(SIGN_TYPE);
 
@@ -62,7 +59,7 @@ public class SignatureUtils {
 		return content.toString();
 	}
 
-	public static String getSignCheckContentV2(Map<String, String> params) {
+	public static String getSignContentV2(Map<String, String> params) {
 		if (params == null) {
 			return null;
 		}
@@ -84,6 +81,7 @@ public class SignatureUtils {
 
 	/**
 	 * 加签
+	 * 
 	 * @param params
 	 * @param salt
 	 * @param charset
@@ -92,7 +90,7 @@ public class SignatureUtils {
 	 */
 	public static String md5Sign(Map<String, String> params, String salt, String charset)
 			throws UnsupportedEncodingException {
-		String signContent = getSignContent(params);
+		String signContent = getSignContentV3(params);
 		return EncryptUtils.encryptMD5ToString(signContent, salt, charset);
 	}
 
@@ -102,6 +100,26 @@ public class SignatureUtils {
 
 	/**
 	 * 验签
+	 * 
+	 * @param content
+	 * @param sign
+	 * @param salt
+	 * @param charset
+	 * @param signType
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 */
+	public static boolean checkSignV3(Map<String, String> params, String salt, String charset, String signType)
+			throws UnsupportedEncodingException {
+		String sign = params.get("sign");
+		String content = getSignContentV3(params);
+
+		return checkSign(content, sign, salt, charset, signType);
+	}
+
+	/**
+	 * 验签
+	 * 
 	 * @param content
 	 * @param sign
 	 * @param salt
@@ -113,17 +131,17 @@ public class SignatureUtils {
 	public static boolean checkSignV2(Map<String, String> params, String salt, String charset, String signType)
 			throws UnsupportedEncodingException {
 		String sign = params.get("sign");
-		String content = getSignCheckContentV2(params);
+		String content = getSignContentV2(params);
 
-		return checkSignV2(content, sign, salt, charset, signType);
+		return checkSign(content, sign, salt, charset, signType);
 	}
 
-	private static boolean checkSignV2(String content, String sign, String salt, String charset, String signType)
+	private static boolean checkSign(String content, String sign, String salt, String charset, String signType)
 			throws UnsupportedEncodingException {
 
 		if (SIGN_TYPE_MD5.equals(signType)) {
 
-			return md5SignVerifyV2(content, salt, charset, sign);
+			return md5SignVerify(content, salt, charset, sign);
 
 		} else {
 
@@ -132,11 +150,10 @@ public class SignatureUtils {
 
 	}
 
-	private static boolean md5SignVerifyV2(String content, String salt, String charset, final String sign)
+	private static boolean md5SignVerify(String content, String salt, String charset, final String sign)
 			throws UnsupportedEncodingException {
 		String md5Sign = md5Sign(content, salt, charset);
 		return md5Sign.equals(sign);
 	}
-
 
 }
