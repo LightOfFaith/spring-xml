@@ -32,7 +32,7 @@ public class LogAspect {
 
 	private static final String REST_LOG_TEMPLATE = "REST API:[%s] path:[%s] is called by IP:[%s], result is %s.";
 
-	@Around("@annotation(log)")
+	@Around("@annotation(logAnno)")
 	public Object log(ProceedingJoinPoint joinPoint, Log logAnno) throws Throwable {
 
 		addLogParamsIfPossible(joinPoint);
@@ -76,26 +76,26 @@ public class LogAspect {
 	private void log(Boolean isSuccess, LogType logType, String methodName) {
 		String content = null;
 		switch (logType) {
-		case REST:
-			content = getRESTRequstContent(methodName, isSuccess);
-			break;
-		case WEB:
-		default:
-			content = getWebRequestContent(methodName, isSuccess);
+			case REST:
+				content = getRESTRequstContent(methodName, isSuccess);
+				break;
+			case WEB:
+			default:
+				content = getWebRequestContent(methodName, isSuccess);
 		}
 		log.info(content);
 	}
 
 	protected String getWebRequestContent(String name, Boolean isSuccess) {
 		String apiName = StringUtils.isNotBlank(name) ? name : "";
-		return buildLogContent(String.format(WEB_LOG_TEMPLATE, apiName, getUri(), getUserName(), getIpAddress(),
+		return buildLogContent(String.format(WEB_LOG_TEMPLATE, apiName, getURL(), getUserName(), getIpAddress(),
 				getResultValue(isSuccess)));
 	}
 
 	protected String getRESTRequstContent(String name, Boolean isSuccess) {
 		String apiName = StringUtils.isNotBlank(name) ? name : "";
 		return buildLogContent(
-				String.format(REST_LOG_TEMPLATE, apiName, getUri(), getIpAddress(), getResultValue(isSuccess)));
+				String.format(REST_LOG_TEMPLATE, apiName, getURL(), getIpAddress(), getResultValue(isSuccess)));
 	}
 
 	private String buildLogContent(String initValue) {
@@ -108,12 +108,11 @@ public class LogAspect {
 		return stringBuilder.toString();
 	}
 
-	private String getUri() {
+	private String getURL() {
 		HttpServletRequest request = getRequest();
 		if (request == null) {
 			return StringUtils.EMPTY;
 		}
-
 		return request.getRequestURI();
 	}
 

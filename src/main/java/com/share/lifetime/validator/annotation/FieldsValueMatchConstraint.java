@@ -7,6 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 import com.share.lifetime.validator.FieldsValueMatchConstraintValidator;
 
@@ -17,6 +18,10 @@ import com.share.lifetime.validator.FieldsValueMatchConstraintValidator;
 public @interface FieldsValueMatchConstraint {
 
 	String message() default "Fields values don't match!";
+
+	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
 
 	String field();
 

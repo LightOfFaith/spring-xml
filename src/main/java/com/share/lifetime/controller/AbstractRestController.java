@@ -6,10 +6,13 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,17 +87,22 @@ public class AbstractRestController extends AbstractController {
 		RestApiResult<Object> failure = failure(errCode);
 		LOG.error(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request),
 				errCode.getCode(), errCode.getMsg(), ex.getClass().getName()));
+		LOG.error(ExceptionUtils.getStackTrace(ex));
 		return failure;
 	}
 
-	@ExceptionHandler({MethodArgumentNotValidException.class})
-	protected @ResponseBody RestApiResult<Object> handleMethodArgumentNotValidException(
-			MethodArgumentNotValidException ex, HttpServletRequest request) {
+	@ExceptionHandler({BindException.class})
+	protected @ResponseBody RestApiResult<Object> handleMethodArgumentNotValidException(BindException ex,
+			HttpServletRequest request) {
 		BindingResult bindingResult = ex.getBindingResult();
 		List<FieldError> fieldErrors = bindingResult.getFieldErrors();
+		List<ObjectError> globalErrors = ex.getBindingResult().getGlobalErrors();
 		StringBuilder errors = new StringBuilder();
 		for (FieldError error : fieldErrors) {
 			errors.append("[" + error.getField() + ": " + error.getDefaultMessage() + "],");
+		}
+		for (ObjectError objectError : globalErrors) {
+			errors.append("[" + objectError.getObjectName() + ": " + objectError.getDefaultMessage() + "],");
 		}
 		int length = errors.length();
 		if (length > 0) {
@@ -105,10 +113,11 @@ public class AbstractRestController extends AbstractController {
 		String msg = errors.toString();
 		BaseErrorCode errCode = BaseErrorCode.PARAM_ERROR;
 		RestApiResult<Object> failure = failure(errCode);
-		LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request), errCode.getCode(),
-				errCode.getMsg(), ex.getClass().getName()));
 		failure.setSubCode(errCode.getCode());
 		failure.setSubMsg(msg);
+		LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request), errCode.getCode(),
+				errCode.getMsg(), ex.getClass().getName()));
+		LOG.error(ExceptionUtils.getStackTrace(ex));
 		return failure;
 	}
 
@@ -123,11 +132,13 @@ public class AbstractRestController extends AbstractController {
 				LOG.info(String.format(LOG_EXCEPTION_TEMPLET2, request.getRequestURL(), getClientIp(request),
 						restErrorCode.getCode(), restErrorCode.getMsg(), restErrorCode.getSubCode(),
 						restErrorCode.getSubMsg(), ex.getClass().getName()));
+				LOG.error(ExceptionUtils.getStackTrace(ex));
 				return failure;
 			} else {
 				RestApiResult<Object> failure = failure(errCode);
 				LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request),
 						errCode.getCode(), errCode.getMsg(), ex.getClass().getName()));
+				LOG.error(ExceptionUtils.getStackTrace(ex));
 				return failure;
 			}
 		} else {
@@ -136,6 +147,7 @@ public class AbstractRestController extends AbstractController {
 			String msg = failure.getMsg();
 			LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request), code, msg,
 					ex.getClass().getName()));
+			LOG.error(ExceptionUtils.getStackTrace(ex));
 			return failure;
 		}
 
