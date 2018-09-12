@@ -16,22 +16,24 @@ import javax.servlet.http.HttpServletRequest;
 
 public class WebUtils {
 
-	private static final String DEFAULT_CHARSET = "UTF-8";
+	/** UTF-8字符集 **/
+	public static final String CHARSET_UTF8 = "UTF-8";
 
 	/**
 	 * 获取客户端实际ip
+	 * 
 	 * @param request
 	 * @return
 	 */
 	public static String getAddr(HttpServletRequest request) {
 		String ip = request.getHeader("X-Real-IP");
 
-		if (ip != null && ip.length() != 0 && !"unKnown".equalsIgnoreCase(ip)) {
+		if (!StringUtils.isEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
 			return ip;
 		}
 		ip = request.getHeader("X-Forwarded-For");
 
-		if (ip != null && ip.length() != 0 && !"unKnown".equalsIgnoreCase(ip)) {
+		if (!StringUtils.isEmpty(ip) && !"unKnown".equalsIgnoreCase(ip)) {
 			// 多次反向代理后会有多个ip值，第一个ip才是真实ip
 			int index = ip.indexOf(",");
 			if (index != -1) {
@@ -42,64 +44,6 @@ public class WebUtils {
 		}
 
 		return request.getRemoteAddr();
-	}
-
-	/**
-	 * 使用默认的UTF-8字符集反编码请求参数值。
-	 * 
-	 * @param value 参数值
-	 * @return 反编码后的参数值
-	 */
-	public static String decode(String value) {
-		return decode(value, DEFAULT_CHARSET);
-	}
-
-	/**
-	 * 使用默认的UTF-8字符集编码请求参数值。
-	 * 
-	 * @param value 参数值
-	 * @return 编码后的参数值
-	 */
-	public static String encode(String value) {
-		return encode(value, DEFAULT_CHARSET);
-	}
-
-	/**
-	 * 使用指定的字符集反编码请求参数值。
-	 * 
-	 * @param value 参数值
-	 * @param charset 字符集
-	 * @return 反编码后的参数值
-	 */
-	public static String decode(String value, String charset) {
-		String result = null;
-		if (!StringUtils.isEmpty(value)) {
-			try {
-				result = URLDecoder.decode(value, charset);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return result;
-	}
-
-	/**
-	 * 使用指定的字符集编码请求参数值。
-	 * 
-	 * @param value 参数值
-	 * @param charset 字符集
-	 * @return 编码后的参数值
-	 */
-	public static String encode(String value, String charset) {
-		String result = null;
-		if (!StringUtils.isEmpty(value)) {
-			try {
-				result = URLEncoder.encode(value, charset);
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return result;
 	}
 
 	public static String buildQuery(Map<String, String> params, String charset) throws IOException {
@@ -115,7 +59,7 @@ public class WebUtils {
 			String name = entry.getKey();
 			String value = entry.getValue();
 			// 忽略参数名或参数值为空的参数
-			if (StringUtils.areNotEmpty(name, value)) {
+			if (org.apache.commons.lang3.StringUtils.isNoneEmpty(name, value)) {
 				if (hasParam) {
 					query.append("&");
 				} else {
@@ -149,9 +93,74 @@ public class WebUtils {
 	}
 
 	/**
+	 * 使用默认的UTF-8字符集反编码请求参数值。
+	 * 
+	 * @param value
+	 *            参数值
+	 * @return 反编码后的参数值
+	 */
+	public static String decode(String value) {
+		return decode(value, CHARSET_UTF8);
+	}
+
+	/**
+	 * 使用默认的UTF-8字符集编码请求参数值。
+	 * 
+	 * @param value
+	 *            参数值
+	 * @return 编码后的参数值
+	 */
+	public static String encode(String value) {
+		return encode(value, CHARSET_UTF8);
+	}
+
+	/**
+	 * 使用指定的字符集反编码请求参数值。
+	 * 
+	 * @param value
+	 *            参数值
+	 * @param charset
+	 *            字符集
+	 * @return 反编码后的参数值
+	 */
+	public static String decode(String value, String charset) {
+		String result = null;
+		if (!StringUtils.isEmpty(value)) {
+			try {
+				result = URLDecoder.decode(value, charset);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 使用指定的字符集编码请求参数值。
+	 * 
+	 * @param value
+	 *            参数值
+	 * @param charset
+	 *            字符集
+	 * @return 编码后的参数值
+	 */
+	public static String encode(String value, String charset) {
+		String result = null;
+		if (!StringUtils.isEmpty(value)) {
+			try {
+				result = URLEncoder.encode(value, charset);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		return result;
+	}
+
+	/**
 	 * 从URL中提取所有的参数。
 	 * 
-	 * @param query URL地址
+	 * @param query
+	 *            URL地址
 	 * @return 参数映射
 	 */
 	public static Map<String, String> splitUrlQuery(String query) {
