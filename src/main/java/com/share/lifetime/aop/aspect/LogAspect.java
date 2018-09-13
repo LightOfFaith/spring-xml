@@ -49,8 +49,8 @@ public class LogAspect {
 	}
 
 	private String getMethodName(ProceedingJoinPoint joinPoint, Log logAnno) {
-		if (StringUtils.isNotBlank(logAnno.value())) {
-			return logAnno.value();
+		if (StringUtils.isNotBlank(logAnno.name())) {
+			return logAnno.name();
 		}
 		return joinPoint.getSignature().getName();
 	}

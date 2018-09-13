@@ -73,9 +73,19 @@ public class WebUtils {
 		return query.toString();
 	}
 
+	public static String getStreamAsString(InputStream stream) throws IOException {
+		return getStreamAsString(stream, "");
+	}
+
 	public static String getStreamAsString(InputStream stream, String charset) throws IOException {
 		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(stream, charset));
+			InputStreamReader in;
+			if (org.apache.commons.lang3.StringUtils.isEmpty(charset)) {
+				in = new InputStreamReader(stream);
+			} else {
+				in = new InputStreamReader(stream, charset);
+			}
+			BufferedReader reader = new BufferedReader(in);
 			StringWriter writer = new StringWriter();
 
 			char[] chars = new char[256];

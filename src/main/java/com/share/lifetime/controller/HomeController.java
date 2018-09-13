@@ -4,7 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.share.lifetime.aop.annotation.Log;
@@ -17,8 +17,8 @@ import com.share.lifetime.util.LogType;
 public class HomeController extends AbstractRestController {
 
 	@Log(logType = LogType.WEB)
-	@PostMapping("/user")
-	public String submitForm(@Valid @LogParam(value = "newUserForm") NewUserForm newUserForm, Model model,
+	@RequestMapping("/user")
+	public String submitForm(@LogParam(value = "newUserForm") NewUserForm newUserForm, Model model,
 			BindingResult result) {
 		if (result.hasErrors()) {
 			System.out.println(true);

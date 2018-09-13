@@ -8,26 +8,19 @@ import java.lang.annotation.Target;
 
 import com.share.lifetime.util.LogType;
 
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface Log {
 
 	/**
-	 * 日志描述
+	 * API name
 	 * @return
 	 */
-	String value() default "";
-	
-	
+	String name() default "";
+
 	/**
-	 * 是否忽略日志记录
-	 * @return
-	 */
-	boolean ignore() default false;
-	
-	/**
-	 * 日志打印类型
+	 * ALLOWED TYPE
 	 * @return
 	 */
 	LogType logType() default LogType.WEB;

@@ -30,6 +30,15 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/*" />
+			<bean id="loggerInterceptor"
+				class="com.share.lifetime.interceptor.LoggerInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+
 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
