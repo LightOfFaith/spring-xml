@@ -33,12 +33,11 @@
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/*" />
-			<bean id="loggerInterceptor"
-				class="com.share.lifetime.interceptor.LoggerInterceptor" />
+			<ref bean="loggerInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
-
-
+	<bean id="loggerInterceptor"
+		class="com.share.lifetime.interceptor.LoggerInterceptor" />
 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">

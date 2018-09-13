@@ -14,6 +14,11 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class WebUtils {
 
 	/** UTF-8字符集 **/
@@ -78,14 +83,15 @@ public class WebUtils {
 	}
 
 	public static String getStreamAsString(InputStream stream, String charset) throws IOException {
+		BufferedReader reader = null;
+		InputStreamReader in = null;
 		try {
-			InputStreamReader in;
 			if (org.apache.commons.lang3.StringUtils.isEmpty(charset)) {
 				in = new InputStreamReader(stream);
 			} else {
 				in = new InputStreamReader(stream, charset);
 			}
-			BufferedReader reader = new BufferedReader(in);
+			reader = new BufferedReader(in);
 			StringWriter writer = new StringWriter();
 
 			char[] chars = new char[256];
@@ -96,8 +102,18 @@ public class WebUtils {
 
 			return writer.toString();
 		} finally {
-			if (stream != null) {
-				stream.close();
+			try {
+				if (reader != null) {
+					reader.close();
+				}
+				if (in != null) {
+					in.close();
+				}
+				if (stream != null) {
+					stream.close();
+				}
+			} catch (IOException e) {
+				log.error(ExceptionUtils.getStackTrace(e));
 			}
 		}
 	}

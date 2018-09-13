@@ -18,7 +18,7 @@ public class HomeController extends AbstractRestController {
 
 	@Log(logType = LogType.WEB)
 	@RequestMapping("/user")
-	public String submitForm(@LogParam(value = "newUserForm") NewUserForm newUserForm, Model model,
+	public String submitForm(@Valid @LogParam(value = "newUserForm") NewUserForm newUserForm, Model model,
 			BindingResult result) {
 		if (result.hasErrors()) {
 			System.out.println(true);

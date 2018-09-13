@@ -2,6 +2,8 @@ package com.share.lifetime.util;
 
 import java.util.Map;
 
+import com.google.gson.Gson;
+
 public class MapUtils {
 
 	/**
@@ -18,4 +20,7 @@ public class MapUtils {
 		return (map != null) && !map.isEmpty();
 	}
 
+	public static String mapToString(final Map<?, ?> map) {
+		return new Gson().toJson(map);
+	}
 }
