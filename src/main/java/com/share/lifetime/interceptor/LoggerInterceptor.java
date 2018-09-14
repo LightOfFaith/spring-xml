@@ -6,13 +6,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.http.MediaType;
@@ -20,7 +18,6 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
-import com.alibaba.fastjson.JSONObject;
 import com.share.lifetime.filter.HttpServletRequestBodyWrapper;
 import com.share.lifetime.util.DateFormatUtils;
 import com.share.lifetime.util.MapUtils;
@@ -30,13 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class LoggerInterceptor extends HandlerInterceptorAdapter {
-
-	private static final String GET = "GET";
-	private static final String POST = "POST";
-	private static final String PUT = "PUT";
-
-	private static final String LOG_TEMPLATE = "receive \n" + "request method   :[%s]\n" + "content type     :[%s]\n"
-			+ "charset          :[%s]\n" + "ip               :[%s]\n" + "url              :[%s]";
 
 	private static final ThreadLocal<Long> START_TIME = new NamedThreadLocal<Long>("Start Time");
 
@@ -62,7 +52,9 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 			builder.append("ContentLength  :").append(request.getContentLength()).append("\n");
 			builder.append("Charset        :").append(request.getCharacterEncoding()).append("\n");
 			builder.append("URL            :").append(request.getRequestURL()).append("\n");
+			builder.append("IP             :").append(WebUtils.getAddr(request)).append("\n");
 			builder.append("ParameterValues:").append(getParameter2String(request)).append("\n");
+			// builder.append("User :").append().append("\n");
 			log.info(builder.toString());
 		}
 		return true;
@@ -90,9 +82,11 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-
+		Long elapsedTime = getElapsedTime();
+		StringBuilder builder = new StringBuilder();
+		builder.append("\n------------------------Elapsed Time   :").append(elapsedTime).append("ms")
+				.append("------------------------\n");
 	}
-
 
 	/**
 	 * 在HandlerAdapter处理请求之后，但在生成视图之前立即调用此方法。
@@ -101,37 +95,38 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
 		super.afterCompletion(request, response, handler, ex);
+		Long elapsedTime = getElapsedTime();
+
+		if (ex != null) {
+			log.debug(ExceptionUtils.getStackTrace(ex));
+		}
+		StringBuilder builder = new StringBuilder();
+		builder.append("\n------------------------End Time:")
+				.append(DateFormatUtils.formatDate(DateFormatUtils.PATTERN_DEFAULT_ON_SECOND, new Date()))
+				.append("------------------------\n");
+		builder.append("耗时:").append(elapsedTime).append("ms,").append("URL:").append(WebUtils.getAddr(request))
+				.append("\n");
+		log.info(builder.toString());
+		builder.append("最大内存:").append(Runtime.getRuntime().maxMemory() / 1024 / 1024).append("mb,").append("已分配内存:")
+				.append(Runtime.getRuntime().totalMemory() / 1024 / 1024).append("mb,").append("已分配内存中的剩余空间:")
+				.append(Runtime.getRuntime().freeMemory() / 1024 / 1024).append("mb,").append("最大可用内存:")
+				.append((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory()
+						+ Runtime.getRuntime().freeMemory()) / 1024 / 1024)
+				.append("mb\n");
+		log.debug(builder.toString());
+		START_TIME.remove();
+
+	}
+
+	/**
+	 * 耗时
+	 * @return
+	 */
+	private Long getElapsedTime() {
 		Long startTime = START_TIME.get();
 		Long endTime = System.currentTimeMillis();
 		Long elapsedTime = endTime - startTime;
-		START_TIME.remove();
-	}
-
-	private String getParameters(HttpServletRequest request) {
-
-		StringBuffer posted = new StringBuffer();
-		Enumeration<?> e = request.getParameterNames();
-		if (e != null) {
-			posted.append("?");
-		}
-		while (e.hasMoreElements()) {
-			if (posted.length() > 1) {
-				posted.append("&");
-			}
-			String curr = (String) e.nextElement();
-			posted.append(curr + "=");
-			posted.append(request.getParameter(curr));
-		}
-		int length = posted.length();
-		String postedStr = posted.toString();
-		if (length == 1 && "?".equals(postedStr)) {
-			posted.delete(length - 1, length);
-		}
-		return posted.toString();
-	}
-
-	private String getRemoteAddr(HttpServletRequest request) {
-		return WebUtils.getAddr(request);
+		return elapsedTime;
 	}
 
 	private String getStreamAsString(InputStream stream, String charset) throws IOException {

@@ -38,6 +38,8 @@
 	</mvc:interceptors>
 	<bean id="loggerInterceptor"
 		class="com.share.lifetime.interceptor.LoggerInterceptor" />
+	<bean id="performanceMonitorInterceptor"
+		class="com.share.lifetime.interceptor.PerformanceMonitorInterceptor" />
 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
@@ -46,4 +48,12 @@
 	</bean>
 	<bean
 		class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"></bean>
+
+	<aop:config>
+		<aop:pointcut
+			expression="execution(* com.share.lifetime.controller.*.*(..))"
+			id="controller" />
+		<aop:advisor advice-ref="performanceMonitorInterceptor"
+			pointcut-ref="controller" />
+	</aop:config>
 </beans>

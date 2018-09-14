@@ -165,6 +165,11 @@
 		</encoder>
 	</appender>
 
+	<logger
+		name="org.springframework.aop.interceptor.PerformanceMonitorInterceptor"
+		level="INFO" additivity="false">
+	</logger>
+
 	<logger name="druid.sql.DataSource" level="DEBUG"
 		additivity="false">
 		<appender-ref ref="DruidSqlRollingFile" />

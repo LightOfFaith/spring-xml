@@ -18,11 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 public class TestController extends AbstractRestController {
 
 	@RequestMapping("/test")
-	public @ResponseBody String test(HttpServletRequest request) throws IOException {
+	public @ResponseBody String test(HttpServletRequest request) throws IOException, InterruptedException {
 		// HttpServletRequestBodyWrapper requestBodyWrapper = new HttpServletRequestBodyWrapper(request);
 		ServletInputStream inputStream = request.getInputStream();
 		log.info("{}", WebUtils.getStreamAsString(inputStream));
 		log.info("{}", request.getParameter("name"));
+		Thread.currentThread().sleep(15000);
 		return "test";
 	}
 
