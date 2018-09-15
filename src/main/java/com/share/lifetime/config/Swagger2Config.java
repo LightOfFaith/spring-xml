@@ -19,9 +19,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * @author hasee
  * @see http://springfox.github.io/springfox/docs/current/
  */
-@EnableSwagger2
-@EnableWebMvc
-@Configuration
+//@EnableSwagger2
+//@EnableWebMvc
+//@Configuration
 public class Swagger2Config {
 
 	@Bean

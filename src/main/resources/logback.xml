@@ -178,14 +178,15 @@
 		</layout>
 	</appender>
 
+	<!-- Spring -->
 	<logger
-		name="org.springframework.aop.interceptor.PerformanceMonitorInterceptor"
-		level="TRACE" additivity="false">
+		name="org.springframework.web.filter.CommonsRequestLoggingFilter">
+		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
 	<logger
-		name="com.share.lifetime.interceptor.PerformanceMonitorInterceptor"
+		name="org.springframework.aop.interceptor.PerformanceMonitorInterceptor"
 		level="TRACE" additivity="false">
 		<appender-ref ref="STDOUT" />
 	</logger>

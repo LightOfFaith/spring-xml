@@ -17,8 +17,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import org.springframework.web.util.ContentCachingRequestWrapper;
 
-import com.share.lifetime.filter.HttpServletRequestBodyWrapper;
 import com.share.lifetime.util.DateFormatUtils;
 import com.share.lifetime.util.MapUtils;
 import com.share.lifetime.util.WebUtils;
@@ -60,21 +60,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		return true;
 	}
 
-	private String getParameter2String(HttpServletRequest request) throws IOException {
-		String method = request.getMethod();
-		String contentType = request.getContentType();
-		String charset = request.getCharacterEncoding();
-		if (("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) || "DELETE".equalsIgnoreCase(method))
-				&& (contentType.contains(MediaType.APPLICATION_JSON_VALUE)
-						|| contentType.contains(MediaType.TEXT_PLAIN_VALUE))) {
-			HttpServletRequestBodyWrapper requestBodyWrapper = new HttpServletRequestBodyWrapper(request);
-			InputStream stream = requestBodyWrapper.getInputStream();
-			return getStreamAsString(stream, charset);
-		} else {
-			Map<String, String[]> parameterMap = request.getParameterMap();
-			return MapUtils.mapToString(parameterMap);
-		}
-	}
+	
 
 	/**
 	 * 在执行处理程序后调用
@@ -98,7 +84,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		Long elapsedTime = getElapsedTime();
 
 		if (ex != null) {
-			log.debug(ExceptionUtils.getStackTrace(ex));
+			log.error(ExceptionUtils.getStackTrace(ex));
 		}
 		StringBuilder builder = new StringBuilder();
 		builder.append("\n------------------------End Time:")
@@ -117,7 +103,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		START_TIME.remove();
 
 	}
-
+	
 	/**
 	 * 耗时
 	 * @return
@@ -127,6 +113,24 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		Long endTime = System.currentTimeMillis();
 		Long elapsedTime = endTime - startTime;
 		return elapsedTime;
+	}
+	
+	private String getParameter2String(HttpServletRequest request) throws IOException {
+		String method = request.getMethod();
+		String contentType = request.getContentType();
+		String charset = request.getCharacterEncoding();
+		if (("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) || "DELETE".equalsIgnoreCase(method))
+				&& (contentType.contains(MediaType.APPLICATION_JSON_VALUE)
+						|| contentType.contains(MediaType.TEXT_PLAIN_VALUE))) {
+			// HttpServletRequestBodyWrapper requestBodyWrapper = new HttpServletRequestBodyWrapper(request);
+			// InputStream stream = requestBodyWrapper.getInputStream();
+			ContentCachingRequestWrapper requestCacheWrapperObject = new ContentCachingRequestWrapper(request);
+			InputStream stream = requestCacheWrapperObject.getInputStream();
+			return getStreamAsString(stream, charset);
+		} else {
+			Map<String, String[]> parameterMap = request.getParameterMap();
+			return MapUtils.mapToString(parameterMap);
+		}
 	}
 
 	private String getStreamAsString(InputStream stream, String charset) throws IOException {

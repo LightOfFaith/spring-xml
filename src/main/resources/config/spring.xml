@@ -5,13 +5,51 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-	<context:component-scan
-		base-package="com.share.lifetime">
-		<context:exclude-filter type="annotation"
-			expression="org.springframework.stereotype.Controller" />
-	</context:component-scan>
+	<beans profile="test">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath:config/test/mail.properties" />
+	</beans>
 
-	<bean class="com.share.lifetime.event.InitializationDataEvent" />
+	<beans profile="dev">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath:config/dev/mail.properties" />
+	</beans>
 
+	<beans profile="pro">
+		<context:property-placeholder
+			ignore-resource-not-found="true"
+			location="classpath:config/pro/mail.properties" />
+	</beans>
+
+	<beans profile="test,dev,pro">
+
+		<context:component-scan
+			base-package="com.share.lifetime">
+			<context:exclude-filter type="annotation"
+				expression="org.springframework.stereotype.Controller" />
+		</context:component-scan>
+
+		<bean class="com.share.lifetime.event.InitializationDataEvent" />
+
+		<!-- https://docs.spring.io/spring/docs/4.3.19.RELEASE/spring-framework-reference/htmlsingle/#mail -->
+		<bean id="mailSender"
+			class="org.springframework.mail.javamail.JavaMailSenderImpl">
+			<!-- <property name="protocol" value="${mail.protocol}"></property> -->
+			<property name="host" value="${mail.smtp.host}"></property>
+			<property name="port" value="${mail.smtp.port}"></property>
+			<property name="username" value="${mail.smtp.username}"></property>
+			<property name="password" value="${mail.smtp.password}"></property>
+			<property name="defaultEncoding"
+				value="${mail.smtp.encoding}"></property>
+			<property name="javaMailProperties">
+				<props>
+					<prop key="${mail.smtp.ssl.enable}"></prop>
+				</props>
+			</property>
+		</bean>
+
+	</beans>
 
 </beans>

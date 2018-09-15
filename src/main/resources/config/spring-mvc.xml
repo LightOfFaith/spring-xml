@@ -9,14 +9,54 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
 
+	<!-- https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#spring-web -->
+
 	<aop:aspectj-autoproxy proxy-target-class="false" />
 
 	<bean class="com.share.lifetime.aop.aspect.LogAspect" />
 
+	<!-- https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-view-jsp 
+		配置JSP和JSTL视图解析器 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.JstlView" />
+		<!-- 强烈建议将JSP文件放在目录下的'WEB-INF' 目录中，以便客户端无法直接访问。 -->
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+	<!-- 配置文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+
+		<!-- 设置允许上传文件最大字节(bytes) 1MB -->
+		<property name="maxUploadSize" value="1048576" />
+	</bean>
+
+	<bean id="loggerInterceptor"
+		class="com.share.lifetime.interceptor.LoggerInterceptor" />
+	<bean id="performanceMonitorInterceptor"
+		class="com.share.lifetime.interceptor.PerformanceMonitorInterceptor">
+		<property name="useDynamicLogger" value="false"></property>
+	</bean>
+
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass"
+			value="org.hibernate.validator.HibernateValidator"></property>
+	</bean>
+	<bean
+		class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"></bean>
+
 	<context:component-scan
 		base-package="com.share.lifetime.controller" />
 
-	<mvc:resources mapping="/static/js/**" location="/js/" />
+	<!-- 配置静态资源 -->
+	<!-- https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-multipart 
+		将响应上的Cache-Control标头设置为max-age = 31536000(秒)，这会导致浏览器使用该文件的缓存版本一年 -->
+	<mvc:resources mapping="/static/js/**" location="/js/"
+		cache-period="31536000" />
 	<mvc:resources mapping="/static/css/**" location="/css/" />
 	<mvc:resources mapping="/static/lib/**" location="/lib/" />
 	<mvc:resources mapping="/static/image/**"
@@ -42,24 +82,28 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 
+	<!-- https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Access_control_CORS 
+		https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html#mvc-cors 
+		当一个资源从与该资源本身所在的服务器不同的域或端口请求一个资源时，资源会发起一个跨域 HTTP 请求。 -->
+	<mvc:cors>
+		<!-- allow-credentials -->
+		<mvc:mapping path="/*" allow-credentials="true"
+			allowed-headers="" allowed-methods="GET"
+			allowed-origins="http://domain1.com,http://domain2.com"
+			exposed-headers="" max-age="3600" />
+	</mvc:cors>
+
+	<!-- 拦截器 -->
 	<mvc:interceptors>
 		<mvc:interceptor>
 			<mvc:mapping path="/*" />
+			<!-- 记录请求响应日志 -->
 			<ref bean="loggerInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
-	<bean id="loggerInterceptor"
-		class="com.share.lifetime.interceptor.LoggerInterceptor" />
-	<bean id="performanceMonitorInterceptor"
-		class="com.share.lifetime.interceptor.PerformanceMonitorInterceptor" />
 
-	<bean id="validator"
-		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-		<property name="providerClass"
-			value="org.hibernate.validator.HibernateValidator"></property>
-	</bean>
-	<bean
-		class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"></bean>
+
+
 
 	<aop:config>
 		<aop:pointcut
