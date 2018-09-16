@@ -6,21 +6,27 @@
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<beans profile="test">
+		<!-- classpath:config/test/db.properties, -->
 		<context:property-placeholder
 			ignore-resource-not-found="true"
-			location="classpath:config/test/mail.properties" />
+			location="classpath:config/test/db.properties,
+			classpath:config/test/mail.properties" />
 	</beans>
 
 	<beans profile="dev">
+		<!-- classpath:config/dev/db.properties, -->
 		<context:property-placeholder
 			ignore-resource-not-found="true"
-			location="classpath:config/dev/mail.properties" />
+			location="classpath:config/dev/db.properties,
+			classpath:config/dev/mail.properties" />
 	</beans>
 
 	<beans profile="pro">
+		<!-- classpath:config/pro/db.properties, -->
 		<context:property-placeholder
 			ignore-resource-not-found="true"
-			location="classpath:config/pro/mail.properties" />
+			location="classpath:config/pro/db.properties,
+			classpath:config/pro/mail.properties" />
 	</beans>
 
 	<beans profile="test,dev,pro">
@@ -46,6 +52,20 @@
 			<property name="javaMailProperties">
 				<props>
 					<prop key="${mail.smtp.ssl.enable}"></prop>
+				</props>
+			</property>
+		</bean>
+
+		<bean id="velocityEngine"
+			class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+			<property name="velocityProperties">
+				<props>
+					<prop key="resource.loader">class</prop>
+					<prop key="class.resource.loader.class">
+						org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+					</prop>
+					<prop key="input.encoding">UTF-8</prop>
+					<prop key="output.encoding">UTF-8</prop>
 				</props>
 			</property>
 		</bean>

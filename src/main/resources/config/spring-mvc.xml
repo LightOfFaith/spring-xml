@@ -24,7 +24,55 @@
 		<!-- 强烈建议将JSP文件放在目录下的'WEB-INF' 目录中，以便客户端无法直接访问。 -->
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
+		<property name="order" value="1" />
+		<property name="viewNames" value="*jsp" />
 	</bean>
+
+	<!-- https://docs.spring.io/spring/docs/4.3.19.RELEASE/spring-framework-reference/htmlsingle/#view -->
+	<!-- 在spring-4.3框架中,不建议使用Velocity，推荐使用FreeMarker或Thymeleaf -->
+	<!-- velocity配置 -->
+	<bean
+		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath"
+			value="/WEB-INF/velocity/"></property>
+	</bean>
+	<!-- velocity视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="cache" value="true" />
+		<property name="prefix" value="" />
+		<property name="suffix" value=".vm" />
+		<property name="order" value="2" />
+	</bean>
+
+	<!-- freemarker 配置 -->
+	<bean
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="templateLoaderPath"
+			value="/WEB-INF/freemarker/" />
+	</bean>
+
+	<!-- freemarker视图解析器 -->
+	<bean
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="cache" value="true"></property>
+		<property name="prefix" value="" />
+		<property name="suffix" value=".ftl" />
+		<property name="order" value="3" />
+	</bean>
+
+	<!-- https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html -->
+	<!-- thymeleaf视图解析器 -->
+	<bean
+		class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+		<property name="prefix" value="/WEB-INF/templates/" />
+		<property name="suffix" value=".html" />
+		<property name="templateMode" value="HTML" />
+		<property name="cacheable" value="true" />
+		<property name="order" value="4" />
+	</bean>
+
+
 
 	<!-- 配置文件上传 -->
 	<bean id="multipartResolver"
@@ -38,13 +86,13 @@
 		class="com.share.lifetime.interceptor.LoggerInterceptor" />
 	<bean id="performanceMonitorInterceptor"
 		class="com.share.lifetime.interceptor.PerformanceMonitorInterceptor">
-		<property name="useDynamicLogger" value="false"></property>
+		<property name="useDynamicLogger" value="false" />
 	</bean>
 
 	<bean id="validator"
 		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
 		<property name="providerClass"
-			value="org.hibernate.validator.HibernateValidator"></property>
+			value="org.hibernate.validator.HibernateValidator" />
 	</bean>
 	<bean
 		class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"></bean>
@@ -62,11 +110,10 @@
 	<mvc:resources mapping="/static/image/**"
 		location="/image/" />
 	<mvc:resources location="classpath:/META-INF/resources/"
-		mapping="swagger-ui.html"></mvc:resources>
+		mapping="swagger-ui.html" />
 	<mvc:resources
 		location="classpath:/META-INF/resources/webjars/"
-		mapping="/webjars/**"></mvc:resources>
-
+		mapping="/webjars/**" />
 
 	<mvc:annotation-driven validator="validator">
 		<mvc:message-converters>
