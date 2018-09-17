@@ -70,6 +70,19 @@
 			</property>
 		</bean>
 
+		<bean id="freeMarkerConfig"
+			class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+			<property name="defaultEncoding" value="UTF-8" />
+			<property name="templateLoaderPath"
+				value="classpath:templates/freemarker/" />
+			<property name="freemarkerSettings">
+				<props>
+					<!-- 默认单位是秒,模板更新延迟；支持的单位是：“s”（秒），“ms”（毫秒），“m”（分钟），“h”（小时） -->
+					<prop key="template_update_delay">30m</prop>
+				</props>
+			</property>
+		</bean>
+
 	</beans>
 
 </beans>

@@ -45,6 +45,8 @@
 		<velocity-tools.version>2.0</velocity-tools.version>
 		<freemarker.version>2.3.28</freemarker.version>
 		<thymeleaf-spring4.version>3.0.9.RELEASE</thymeleaf-spring4.version>
+		<quartz.version>2.3.0</quartz.version>
+		<quartz-jobs.version>2.3.0</quartz-jobs.version>
 
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
 		<maven-war-plugin.version>3.2.2</maven-war-plugin.version>
@@ -366,6 +368,20 @@
 			<artifactId>thymeleaf-spring4</artifactId>
 			<version>${thymeleaf-spring4.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
+			<version>${quartz-jobs.version}</version>
+		</dependency>
+
+
 
 
 
