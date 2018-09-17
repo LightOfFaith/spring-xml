@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.share.lifetime.domain.User;
+import com.share.lifetime.service.EmailService;
 import com.share.lifetime.service.RegistrationService;
 
 
@@ -22,7 +23,7 @@ import com.share.lifetime.service.RegistrationService;
 public class RegistrationServiceImpl implements RegistrationService {
 
 	@Autowired
-	private JavaMailSender mailSender;
+	private EmailService emailService;
 	@Autowired
 	private VelocityEngine velocityEngine;
 
@@ -31,20 +32,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 	}
 
 	private void sendConfirmationEmail(final User user) {
-		MimeMessagePreparator preparator = new MimeMessagePreparator() {
-			public void prepare(MimeMessage mimeMessage) throws Exception {
-				MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-				message.setSubject("********");
-				message.setTo(user.getEmailAddress());
-				message.setFrom("307071075@qq.com");
-				Map<String, Object> model = new HashMap<String, Object>();
-				model.put("user", user);
-				String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
-						"templates/velocity/registration-confirmation.vm", model);
-				message.setText(text, true);
-			}
-		};
-		this.mailSender.send(preparator);
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("user", user);
+		String content = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,
+				"templates/velocity/registration-confirmation.vm", model);
+		emailService.sendMessage("********", user.getEmailAddress(), "307071075@qq.com", content);
 	}
 
 }
