@@ -1,6 +1,5 @@
 package com.share.lifetime.service.impl;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +24,11 @@ public class RegistrationServiceImpl implements RegistrationService {
 	@Autowired
 	private VelocityEngine velocityEngine;
 
-	public void register(User user) throws IOException {
+	public void register(User user) throws Exception {
 		sendConfirmationEmail(user);
 	}
 
-	private void sendConfirmationEmail(final User user) throws IOException {
+	private void sendConfirmationEmail(final User user) throws Exception {
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("user", user);
 		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine,

@@ -2,8 +2,6 @@ package com.share.lifetime.service.impl;
 
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +26,7 @@ public class DingTalkMessageServiceImplTest {
 	}
 
 	@Test
-	public void testSendMarkdownMessageMessage() throws IOException {
+	public void testSendMarkdownMessageMessage() throws Exception {
 		MarkdownMessage message = new MarkdownMessage();
 		message.setTitle("2018世界人工智能大会");
 		message.add(

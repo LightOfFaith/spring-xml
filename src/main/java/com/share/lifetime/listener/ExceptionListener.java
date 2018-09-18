@@ -1,7 +1,6 @@
 package com.share.lifetime.listener;
 
-import java.io.IOException;
-
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -31,26 +30,25 @@ public class ExceptionListener implements ApplicationListener<ExceptionEvent> {
 		Exception exception = event.getException();
 		MessageService messageService = event.getMessageService();
 		log.info("异常监听订阅异常服务信息！！message:{},exception:{}", message, exception);
-		if ((message instanceof MailMessage) && (messageService instanceof EmailService)) {
-			MailMessage mailMessage = (MailMessage) message;
-			EmailService emailService = (EmailService) messageService;
-			try {
+		try {
+			if ((message instanceof MailMessage) && (messageService instanceof EmailService)) {
+				MailMessage mailMessage = (MailMessage) message;
+				EmailService emailService = (EmailService) messageService;
 				emailService.sendMessage(mailMessage);
-			} catch (IOException e) {
-				e.printStackTrace();
+
 			}
-		}
-		if ((message instanceof DingTalkMessage) && messageService instanceof DingTalkMessageService) {
-			DingTalkMessage dingTalkMessage = (DingTalkMessage) message;
-			DingTalkMessageService dingTalkMessageService = (DingTalkMessageService) messageService;
-			try {
+			if ((message instanceof DingTalkMessage) && messageService instanceof DingTalkMessageService) {
+				DingTalkMessage dingTalkMessage = (DingTalkMessage) message;
+				DingTalkMessageService dingTalkMessageService = (DingTalkMessageService) messageService;
 				dingTalkMessageService.sendMessage(dingTalkMessage);
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
+			log.info("异常监听订阅异常服务信息处理完成！！source:{},Date:{}", source,
+					DateFormatUtils.formatDate(DateFormatUtils.PATTERN_DEFAULT_ON_SECOND, timestamp));
+		} catch (java.lang.Exception e) {
+			log.error("异常监听订阅异常服务信息处理异常！！source:{},Date:{},Exception:{}", source,
+					DateFormatUtils.formatDate(DateFormatUtils.PATTERN_DEFAULT_ON_SECOND, timestamp),
+					ExceptionUtils.getStackTrace(e));
 		}
-		log.info("异常监听订阅异常服务信息处理完成！！source:{},Date:{}", source,
-				DateFormatUtils.formatDate(DateFormatUtils.PATTERN_DEFAULT_ON_SECOND, timestamp));
 	}
 
 }
