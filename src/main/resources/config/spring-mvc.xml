@@ -95,7 +95,7 @@
 			value="org.hibernate.validator.HibernateValidator" />
 	</bean>
 	<bean
-		class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"></bean>
+		class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor" />
 
 	<context:component-scan
 		base-package="com.share.lifetime.controller" />

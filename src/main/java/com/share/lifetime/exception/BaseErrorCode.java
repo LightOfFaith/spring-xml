@@ -8,7 +8,7 @@ package com.share.lifetime.exception;
  */
 public enum BaseErrorCode implements ErrorCode {
 
-	PARAM_ERROR("1000", "请求参数校验错误"), BIZ_ERROR("2000", "业务逻辑错误"),
+	PARAM_ERROR("1000", "参数校验错误"), BIZ_ERROR("2000", "业务逻辑错误"),
 	/**
 	 * (数据库，缓存，消息等)
 	 */

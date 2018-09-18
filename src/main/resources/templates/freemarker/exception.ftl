@@ -20,13 +20,13 @@
 					<h2
 						style="font-size: 16px; font-family: '微软雅黑', 'Microsoft Yahei', 'Heiti'; margin-top: 20px;">告警详情</h2>
 					<ul style="font-family: '微软雅黑', 'Microsoft Yahei', 'Heiti';">
+						<li style="line-height: 1.5em;">项目：${exception.project}</li>
 						<li style="line-height: 1.5em;">告警对象：${exception.instance}</li>
 						<li style="line-height: 1.5em;">告警条件：${exception.condition}</li>
 						<li style="line-height: 1.5em;">异常码值：${exception.code} <#if
 								exception.subCode?? && exception.subCode !="">,${exception.subCode}</#if></li>
 						<li style="line-height: 1.5em;">异常描述：${exception.msg} <#if
 								exception.subMsg?? && exception.subMsg !="">,${exception.subMsg}</#if></li>
-						<li style="line-height: 1.5em;">项目：${exception.project}</li>
 						<li style="line-height: 1.5em;">触发时间：<span
 							style="border-bottom: 1px dashed #ccc;">${exception.timestamp}</span>
 						</li>

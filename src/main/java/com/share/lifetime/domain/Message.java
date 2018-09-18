@@ -22,7 +22,7 @@ public abstract class Message {
 
 	private String from;
 
-	private String content;
+	private String text;
 
 	private Date sentDate;
 

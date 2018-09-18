@@ -1,5 +1,7 @@
 package com.share.lifetime.service.impl;
 
+import java.io.IOException;
+
 import org.apache.velocity.app.VelocityEngine;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +27,7 @@ public class RegistrationServiceImplTest {
 	private VelocityEngine velocityEngine;
 
 	@Test
-	public void testRegister() {
+	public void testRegister() throws IOException {
 		log.info(velocityEngine.getProperty("class.resource.loader.class").toString());
 		User user = new User();
 		user.setUsername("Thomas");
