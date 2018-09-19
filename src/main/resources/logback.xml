@@ -180,7 +180,8 @@
 
 	<!-- Spring -->
 	<logger
-		name="org.springframework.web.filter.CommonsRequestLoggingFilter">
+		name="org.springframework.web.filter.CommonsRequestLoggingFilter"
+		additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>

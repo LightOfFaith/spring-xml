@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import org.springframework.web.util.ContentCachingRequestWrapper;
 
 import com.share.lifetime.util.DateFormatUtils;
 import com.share.lifetime.util.MapUtils;
@@ -60,7 +59,6 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		return true;
 	}
 
-	
 
 	/**
 	 * 在执行处理程序后调用
@@ -103,7 +101,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		START_TIME.remove();
 
 	}
-	
+
 	/**
 	 * 耗时
 	 * @return
@@ -114,7 +112,7 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		Long elapsedTime = endTime - startTime;
 		return elapsedTime;
 	}
-	
+
 	private String getParameter2String(HttpServletRequest request) throws IOException {
 		String method = request.getMethod();
 		String contentType = request.getContentType();
@@ -122,9 +120,8 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		if (("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) || "DELETE".equalsIgnoreCase(method))
 				&& (contentType.contains(MediaType.APPLICATION_JSON_VALUE)
 						|| contentType.contains(MediaType.TEXT_PLAIN_VALUE))) {
-			// HttpServletRequestBodyWrapper requestBodyWrapper = new HttpServletRequestBodyWrapper(request);
-			// InputStream stream = requestBodyWrapper.getInputStream();
-			ContentCachingRequestWrapper requestCacheWrapperObject = new ContentCachingRequestWrapper(request);
+			com.share.lifetime.filter.ContentCachingRequestWrapper requestCacheWrapperObject = new com.share.lifetime.filter.ContentCachingRequestWrapper(
+					request);
 			InputStream stream = requestCacheWrapperObject.getInputStream();
 			return getStreamAsString(stream, charset);
 		} else {
