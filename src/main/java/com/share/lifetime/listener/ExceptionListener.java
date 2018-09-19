@@ -35,7 +35,6 @@ public class ExceptionListener implements ApplicationListener<ExceptionEvent> {
 				MailMessage mailMessage = (MailMessage) message;
 				EmailService emailService = (EmailService) messageService;
 				emailService.sendMessage(mailMessage);
-
 			}
 			if ((message instanceof DingTalkMessage) && messageService instanceof DingTalkMessageService) {
 				DingTalkMessage dingTalkMessage = (DingTalkMessage) message;

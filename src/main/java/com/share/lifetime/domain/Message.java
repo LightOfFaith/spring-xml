@@ -1,10 +1,7 @@
 package com.share.lifetime.domain;
 
-import java.util.Date;
-
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * 
@@ -13,17 +10,7 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString
 public abstract class Message {
-
-	private String subject;
-
-	private String to;
-
-	private String from;
-
-	private String text;
-
-	private Date sentDate;
-
+	
+	 public abstract String toJsonString();
 }

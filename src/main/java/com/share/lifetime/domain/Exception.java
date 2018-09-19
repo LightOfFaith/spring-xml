@@ -41,9 +41,9 @@ public class Exception {
 	/**
 	 *   异常发生时间
 	 */
-	private String timestamp;
+	private String time;
 
-	public Exception(String instance, String condition, ErrorCode errorCode, String project, String timestamp) {
+	public Exception(String instance, String condition, ErrorCode errorCode, String project, String time) {
 		super();
 		this.instance = instance;
 		this.condition = condition;
@@ -56,7 +56,7 @@ public class Exception {
 			this.subMsg = restErrorCode.getSubMsg();
 		}
 		this.project = project;
-		this.timestamp = timestamp;
+		this.time = time;
 	}
 
 

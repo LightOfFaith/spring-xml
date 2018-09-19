@@ -1,6 +1,7 @@
 package com.share.lifetime.service.impl;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -8,7 +9,7 @@ import com.dingtalk.chatbot.DingtalkChatbotClient;
 import com.dingtalk.chatbot.SendResult;
 import com.dingtalk.chatbot.message.MarkdownMessage;
 import com.share.lifetime.constant.DingTalkConsts;
-import com.share.lifetime.domain.DingTalkMessage;
+import com.share.lifetime.domain.DingTalkMarkdownMessage;
 import com.share.lifetime.domain.Message;
 import com.share.lifetime.service.DingTalkMessageService;
 
@@ -20,11 +21,14 @@ public class DingTalkMessageServiceImpl implements DingTalkMessageService {
 
 	@Override
 	public void sendMessage(Message message) throws IOException {
-		if (message instanceof DingTalkMessage) {
-			DingTalkMessage dingTalkMarkdownMessage = (DingTalkMessage) message;
+		if (message instanceof DingTalkMarkdownMessage) {
+			DingTalkMarkdownMessage dingTalkMarkdownMessage = (DingTalkMarkdownMessage) message;
 			MarkdownMessage markdownMessage = new MarkdownMessage();
-			markdownMessage.setTitle(MarkdownMessage.getHeaderText(2, dingTalkMarkdownMessage.getSubject()));
-			markdownMessage.add(MarkdownMessage.getBoldText(dingTalkMarkdownMessage.getText()));
+			markdownMessage.setTitle(dingTalkMarkdownMessage.getTitle());
+			List<String> items = dingTalkMarkdownMessage.getItems();
+			for (String item : items) {
+				markdownMessage.add(item);
+			}
 			sendMessage(markdownMessage);
 		}
 	}

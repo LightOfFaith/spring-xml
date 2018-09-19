@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
-import com.share.lifetime.domain.DingTalkMessage;
+import com.share.lifetime.domain.DingTalkMarkdownMessage;
 import com.share.lifetime.domain.Exception;
 import com.share.lifetime.domain.MailMessage;
 import com.share.lifetime.exception.BaseErrorCode;
@@ -61,20 +61,16 @@ public class ExceptionServiceImplTest {
 	public void testHandlerExceptionByRestErrorCode() throws TemplateNotFoundException, MalformedTemplateNameException,
 			ParseException, IOException, TemplateException {
 		BizErrorCode errorCode = BizErrorCode.MISSING_SIGNATURE_ERROR;
-		handlerExceptionToDingTalk(errorCode);
-//		handlerExceptionToEmail(errorCode);
+		handlerExceptionToDingTalkMarkdownMessage(errorCode);
+		// handlerExceptionToEmail(errorCode);
 	}
 
-	private void handlerExceptionToDingTalk(ErrorCode errorCode) {
-		DingTalkMessage message = new DingTalkMessage();
-		message.setSubject("********");
-		message.setTo("381345579@qq.com");
-		message.setFrom("307071075@qq.com");
-		Exception exception = new Exception("192.168.0.1", "未配置子商户费率！！请即使查阅重新提交！！", errorCode, "Pay",
+	private void handlerExceptionToDingTalkMarkdownMessage(ErrorCode errorCode) {
+		DingTalkMarkdownMessage message = new DingTalkMarkdownMessage();
+		message.setTitle("****告警信息****");
+		Exception exception = new Exception("192.168.0.1", "未配置子商户费率！！请及时查阅重新提交！！", errorCode, "Pay",
 				DateFormatUtils.formatDate(DateFormatUtils.PATTERN_DEFAULT_ON_SECOND, new Date()));
-		String processTemplateIntoString = MessageTemplateUtils.getExceptionToTemplate(exception);
-		message.setText(processTemplateIntoString);
-		message.setSentDate(new Date());
+		message.setItems(MessageTemplateUtils.listExceptionToTemplate(exception));
 		exceptionService.handlerException(message, exception, dingTalkMessageService);
 	}
 

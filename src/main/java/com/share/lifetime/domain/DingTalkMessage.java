@@ -1,6 +1,6 @@
 package com.share.lifetime.domain;
 
-public class DingTalkMessage extends Message {
-	
+public abstract class DingTalkMessage extends Message {
+
 
 }
