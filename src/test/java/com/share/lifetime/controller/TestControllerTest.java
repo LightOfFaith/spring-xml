@@ -38,11 +38,22 @@ public class TestControllerTest {
 	}
 
 	@Test
-	public void testTest() throws Exception {
+	public void testTest1() throws Exception {
 		String values = new String(
 				"{\"version\":\"09\",\"ins_cd\":\"08M0026034\",\"merchantno_fuiou\":\"0007970F1738384\",\"pay_type\":\"1\",\"scan_type\":\"1\",\"terminal_id\":\"61250648\",\"retri_ref_no\":\"910756564243\",\"channel_trade_no\":\"4200000162201809187171000783\",\"pay_status\":\"1\",\"pay_msg\":\"支付成功\",\"total_fee\":\"2\",\"createtime\":\"20180918110601\",\"settle_date\":\"20180918\",\"terminal_trace\":\"910756564243\",\"buyer_id\":\"\",\"openid\":\"\",\"key_sign\":\"c5c7550fe3478c14989cc272649b66be\"}");
 		this.mockMvc
 				.perform(get("/test").contentType("application/x-www-form-urlencoded;charset=GBK").param("req", values)
+						.accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
+				.andDo(print()).andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"));
+	}
+	
+	@Test
+	public void testTest2() throws Exception {
+		String content = 
+				"{\"version\":\"09\",\"ins_cd\":\"08M0026034\",\"merchantno_fuiou\":\"0007970F1738384\",\"pay_type\":\"1\",\"scan_type\":\"1\",\"terminal_id\":\"61250648\",\"retri_ref_no\":\"910756564243\",\"channel_trade_no\":\"4200000162201809187171000783\",\"pay_status\":\"1\",\"pay_msg\":\"支付成功\",\"total_fee\":\"2\",\"createtime\":\"20180918110601\",\"settle_date\":\"20180918\",\"terminal_trace\":\"910756564243\",\"buyer_id\":\"\",\"openid\":\"\",\"key_sign\":\"c5c7550fe3478c14989cc272649b66be\"}";
+		this.mockMvc
+				.perform(get("/test").contentType("application/json;charset=UTF-8").content(content.getBytes())
 						.accept(MediaType.parseMediaType("application/json;charset=UTF-8")))
 				.andDo(print()).andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"));

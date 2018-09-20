@@ -29,36 +29,50 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 
 	private static final ThreadLocal<Long> START_TIME = new NamedThreadLocal<Long>("Start Time");
 
+	private boolean isShowLog = false;
+
+	public void setShowLog(boolean isShowLog) {
+		this.isShowLog = isShowLog;
+	}
+
 	/**
-	 * 在执行实际处理程序之前调用，但尚未生成视图 该方法返回一个布尔值 
+	 * 在执行实际处理程序之前调用，但尚未生成视图 该方法返回一个布尔值
 	 * 它告诉Spring请求是否应由处理程序进一步处理（true）或不处理（false）。
 	 */
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
+		StringBuilder builderInfo = new StringBuilder(16);
 		Long startTime = System.currentTimeMillis();
 		START_TIME.set(startTime);
-		if (handler instanceof HandlerMethod) {
-			StringBuilder builder = new StringBuilder();
-			HandlerMethod handlerMethod = (HandlerMethod) handler;
-			builder.append("\n------------------------Start Time:")
-					.append(DateFormatUtils.formatDate(DateFormatUtils.PATTERN_DEFAULT_ON_SECOND, new Date()))
-					.append("------------------------\n");
-			builder.append("Controller     :").append(handlerMethod.getBean().getClass().getName()).append("\n");
-			builder.append("Method         :").append(handlerMethod.getMethod().getName()).append("\n");
-			builder.append("Request Method :").append(request.getMethod()).append("\n");
-			builder.append("ContentType    :").append(request.getContentType()).append("\n");
-			builder.append("ContentLength  :").append(request.getContentLength()).append("\n");
-			builder.append("Charset        :").append(request.getCharacterEncoding()).append("\n");
-			builder.append("URL            :").append(request.getRequestURL()).append("\n");
-			builder.append("IP             :").append(WebUtils.getAddr(request)).append("\n");
-			builder.append("ParameterValues:").append(getParameter2String(request)).append("\n");
-			// builder.append("User :").append().append("\n");
-			log.info(builder.toString());
+		builderInfo.append("\n------------------------Start Time:")
+				.append(DateFormatUtils.formatDate(DateFormatUtils.PATTERN_DEFAULT_ON_SECOND, new Date()))
+				.append("------------------------\n");
+		if (isShowLog) {
+			if (handler instanceof HandlerMethod) {
+				HandlerMethod handlerMethod = (HandlerMethod) handler;
+				if (log.isDebugEnabled()) {
+					StringBuilder builderDebug = new StringBuilder(16);
+					builderDebug.append("Controller     :").append(handlerMethod.getBean().getClass().getName())
+							.append("\n");
+					builderDebug.append("Method         :").append(handlerMethod.getMethod().getName()).append("\n");
+					builderDebug.append("Request Method :").append(request.getMethod()).append("\n");
+					builderDebug.append("ContentLength  :").append(request.getContentLength()).append("\n");
+					builderInfo.append(builderDebug);
+				}
+				builderInfo.append("ContentType    :").append(request.getContentType()).append("\n");
+				builderInfo.append("Charset        :").append(request.getCharacterEncoding()).append("\n");
+				builderInfo.append("URL            :").append(request.getRequestURL()).append("\n");
+				builderInfo.append("IP             :").append(WebUtils.getAddr(request)).append("\n");
+				builderInfo.append("ParameterValues:").append(getParameter2String(request)).append("\n");
+				// builder.append("User :").append().append("\n");
+			}
 		}
+
+		String logContent = builderInfo.toString();
+		printLog(logContent);
 		return true;
 	}
-
 
 	/**
 	 * 在执行处理程序后调用
@@ -80,30 +94,43 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 			throws Exception {
 		super.afterCompletion(request, response, handler, ex);
 		Long elapsedTime = getElapsedTime();
-
 		if (ex != null) {
 			log.error(ExceptionUtils.getStackTrace(ex));
 		}
-		StringBuilder builder = new StringBuilder();
-		builder.append("\n------------------------End Time:")
+		StringBuilder builderInfo = new StringBuilder(16);
+		builderInfo.append("\n------------------------End Time:")
 				.append(DateFormatUtils.formatDate(DateFormatUtils.PATTERN_DEFAULT_ON_SECOND, new Date()))
 				.append("------------------------\n");
-		builder.append("耗时:").append(elapsedTime).append("ms,").append("URL:").append(WebUtils.getAddr(request))
+		builderInfo.append("耗时:").append(elapsedTime).append("ms,").append("URL:").append(request.getRequestURL())
 				.append("\n");
-		log.info(builder.toString());
-		builder.append("最大内存:").append(Runtime.getRuntime().maxMemory() / 1024 / 1024).append("mb,").append("已分配内存:")
-				.append(Runtime.getRuntime().totalMemory() / 1024 / 1024).append("mb,").append("已分配内存中的剩余空间:")
-				.append(Runtime.getRuntime().freeMemory() / 1024 / 1024).append("mb,").append("最大可用内存:")
-				.append((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory()
-						+ Runtime.getRuntime().freeMemory()) / 1024 / 1024)
-				.append("mb\n");
-		log.debug(builder.toString());
+		if (isShowLog) {
+			if (log.isDebugEnabled()) {
+				StringBuilder builderDebug = new StringBuilder(16);
+				builderDebug.append("最大内存:").append(Runtime.getRuntime().maxMemory() / 1024 / 1024).append("mb,")
+						.append("已分配内存:").append(Runtime.getRuntime().totalMemory() / 1024 / 1024).append("mb,")
+						.append("已分配内存中的剩余空间:").append(Runtime.getRuntime().freeMemory() / 1024 / 1024)
+						.append("mb,").append("最大可用内存:").append((Runtime.getRuntime().maxMemory()
+								- Runtime.getRuntime().totalMemory() + Runtime.getRuntime().freeMemory()) / 1024 / 1024)
+						.append("mb\n");
+				builderInfo.append(builderDebug);
+			}
+		}
+		String logContent = builderInfo.toString();
+		printLog(logContent);
 		START_TIME.remove();
+	}
 
+	private void printLog(String logContent) {
+		if (log.isInfoEnabled()) {
+			log.info(logContent);
+		} else {
+			log.debug(logContent);
+		}
 	}
 
 	/**
 	 * 耗时
+	 * 
 	 * @return
 	 */
 	private Long getElapsedTime() {
@@ -130,17 +157,18 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 		}
 	}
 
-	private String getStreamAsString(InputStream stream, String charset) throws IOException {
+	private String getStreamAsString(InputStream inputStream, String charset) throws IOException {
+		InputStreamReader streamReader = null;
 		BufferedReader reader = null;
-		InputStreamReader in = null;
+		StringWriter writer = null;
 		try {
 			if (org.apache.commons.lang3.StringUtils.isEmpty(charset)) {
-				in = new InputStreamReader(stream);
+				streamReader = new InputStreamReader(inputStream);
 			} else {
-				in = new InputStreamReader(stream, charset);
+				streamReader = new InputStreamReader(inputStream, charset);
 			}
-			reader = new BufferedReader(in);
-			StringWriter writer = new StringWriter();
+			reader = new BufferedReader(streamReader);
+			writer = new StringWriter();
 
 			char[] chars = new char[256];
 			int count = 0;
@@ -150,14 +178,17 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 			return writer.toString();
 		} finally {
 			try {
+				if (writer != null) {
+					writer.close();
+				}
 				if (reader != null) {
 					reader.close();
 				}
-				if (in != null) {
-					in.close();
+				if (streamReader != null) {
+					streamReader.close();
 				}
-				if (stream != null) {
-					stream.close();
+				if (inputStream != null) {
+					inputStream.close();
 				}
 			} catch (IOException e) {
 				log.error(ExceptionUtils.getStackTrace(e));

@@ -83,7 +83,10 @@
 	</bean>
 
 	<bean id="loggerInterceptor"
-		class="com.share.lifetime.interceptor.LoggerInterceptor" />
+		class="com.share.lifetime.interceptor.LoggerInterceptor">
+		<property name="showLog" value="true"></property>
+	</bean>
+
 	<bean id="performanceMonitorInterceptor"
 		class="com.share.lifetime.interceptor.PerformanceMonitorInterceptor">
 		<property name="useDynamicLogger" value="false" />
@@ -148,9 +151,6 @@
 			<ref bean="loggerInterceptor" />
 		</mvc:interceptor>
 	</mvc:interceptors>
-
-
-
 
 	<aop:config>
 		<aop:pointcut
