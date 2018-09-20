@@ -57,6 +57,7 @@ public class AbstractRestController extends AbstractController {
 		return apiResult;
 	}
 
+	@Override
 	protected <T> RestApiResult<T> failure(ErrorCode errorCode) {
 		RestApiResult<T> apiResult = new RestApiResult<>();
 		apiResult.setCode(errorCode.getCode());
@@ -91,8 +92,7 @@ public class AbstractRestController extends AbstractController {
 	}
 
 	@ExceptionHandler({BindException.class})
-	protected @ResponseBody RestApiResult<Object> handleBindException(BindException ex,
-			HttpServletRequest request) {
+	protected @ResponseBody RestApiResult<Object> handleBindException(BindException ex, HttpServletRequest request) {
 		BindingResult bindingResult = ex.getBindingResult();
 		List<FieldError> fieldErrors = bindingResult.getFieldErrors();
 		List<ObjectError> globalErrors = ex.getBindingResult().getGlobalErrors();

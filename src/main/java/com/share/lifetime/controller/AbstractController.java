@@ -5,7 +5,9 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.share.lifetime.base.RestApiResult;
 import com.share.lifetime.base.Result;
+import com.share.lifetime.exception.ErrorCode;
 import com.share.lifetime.util.WebUtils;
 
 public abstract class AbstractController {
@@ -35,6 +37,8 @@ public abstract class AbstractController {
 	protected abstract <T> Result<T> success(String msg, T result);
 
 	protected abstract <T> Result<T> failure(String msg);
+
+	protected abstract <T> Result<T> failure(ErrorCode errorCode);
 
 
 }

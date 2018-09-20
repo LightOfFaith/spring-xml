@@ -154,8 +154,7 @@
 
 	<aop:config>
 		<aop:pointcut
-			expression="execution(* com.share.lifetime.controller.*.*(..))"
-			id="controller" />
+			expression="execution(* com.share.lifetime..*.*(..))" id="controller" />
 		<aop:advisor advice-ref="performanceMonitorInterceptor"
 			pointcut-ref="controller" />
 	</aop:config>

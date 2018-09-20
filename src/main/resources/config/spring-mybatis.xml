@@ -145,7 +145,7 @@
 
 		<aop:config>
 			<aop:pointcut
-				expression="execution(* com.share.lifetime..*Service.*(..))"
+				expression="execution(* com.share.lifetime..*Service.*.*(..))"
 				id="service" />
 			<aop:advisor advice-ref="txAdvice" pointcut-ref="service" />
 		</aop:config>

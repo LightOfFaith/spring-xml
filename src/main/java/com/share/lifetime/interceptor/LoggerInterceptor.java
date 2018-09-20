@@ -1,10 +1,7 @@
 package com.share.lifetime.interceptor;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
 import java.util.Date;
 import java.util.Map;
 
@@ -108,9 +105,9 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 				StringBuilder builderDebug = new StringBuilder(16);
 				builderDebug.append("最大内存:").append(Runtime.getRuntime().maxMemory() / 1024 / 1024).append("mb,")
 						.append("已分配内存:").append(Runtime.getRuntime().totalMemory() / 1024 / 1024).append("mb,")
-						.append("已分配内存中的剩余空间:").append(Runtime.getRuntime().freeMemory() / 1024 / 1024)
-						.append("mb,").append("最大可用内存:").append((Runtime.getRuntime().maxMemory()
-								- Runtime.getRuntime().totalMemory() + Runtime.getRuntime().freeMemory()) / 1024 / 1024)
+						.append("已分配内存中的剩余空间:").append(Runtime.getRuntime().freeMemory() / 1024 / 1024).append("mb,")
+						.append("最大可用内存:").append((Runtime.getRuntime().maxMemory() - Runtime.getRuntime().totalMemory()
+								+ Runtime.getRuntime().freeMemory()) / 1024 / 1024)
 						.append("mb\n");
 				builderInfo.append(builderDebug);
 			}
@@ -143,57 +140,18 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
 	private String getParameter2String(HttpServletRequest request) throws IOException {
 		String method = request.getMethod();
 		String contentType = request.getContentType();
-		String charset = request.getCharacterEncoding();
 		if (("POST".equalsIgnoreCase(method) || "PUT".equalsIgnoreCase(method) || "DELETE".equalsIgnoreCase(method))
 				&& (contentType.contains(MediaType.APPLICATION_JSON_VALUE)
 						|| contentType.contains(MediaType.TEXT_PLAIN_VALUE))) {
 			com.share.lifetime.filter.ContentCachingRequestWrapper requestCacheWrapperObject = new com.share.lifetime.filter.ContentCachingRequestWrapper(
 					request);
 			InputStream stream = requestCacheWrapperObject.getInputStream();
-			return getStreamAsString(stream, charset);
+			return WebUtils.getStreamAsString(stream);
 		} else {
 			Map<String, String[]> parameterMap = request.getParameterMap();
 			return MapUtils.mapToString(parameterMap);
 		}
 	}
 
-	private String getStreamAsString(InputStream inputStream, String charset) throws IOException {
-		InputStreamReader streamReader = null;
-		BufferedReader reader = null;
-		StringWriter writer = null;
-		try {
-			if (org.apache.commons.lang3.StringUtils.isEmpty(charset)) {
-				streamReader = new InputStreamReader(inputStream);
-			} else {
-				streamReader = new InputStreamReader(inputStream, charset);
-			}
-			reader = new BufferedReader(streamReader);
-			writer = new StringWriter();
-
-			char[] chars = new char[256];
-			int count = 0;
-			while ((count = reader.read(chars)) > 0) {
-				writer.write(chars, 0, count);
-			}
-			return writer.toString();
-		} finally {
-			try {
-				if (writer != null) {
-					writer.close();
-				}
-				if (reader != null) {
-					reader.close();
-				}
-				if (streamReader != null) {
-					streamReader.close();
-				}
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (IOException e) {
-				log.error(ExceptionUtils.getStackTrace(e));
-			}
-		}
-	}
 
 }

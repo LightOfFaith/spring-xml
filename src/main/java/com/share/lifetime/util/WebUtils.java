@@ -82,35 +82,37 @@ public class WebUtils {
 		return getStreamAsString(stream, "");
 	}
 
-	public static String getStreamAsString(InputStream stream, String charset) throws IOException {
+	public static String getStreamAsString(InputStream inputStream, String charset) throws IOException {
 		BufferedReader reader = null;
-		InputStreamReader in = null;
+		InputStreamReader streamReader = null;
+		StringWriter writer = null;
 		try {
 			if (org.apache.commons.lang3.StringUtils.isEmpty(charset)) {
-				in = new InputStreamReader(stream);
+				streamReader = new InputStreamReader(inputStream);
 			} else {
-				in = new InputStreamReader(stream, charset);
+				streamReader = new InputStreamReader(inputStream, charset);
 			}
-			reader = new BufferedReader(in);
-			StringWriter writer = new StringWriter();
-
+			reader = new BufferedReader(streamReader);
+			writer = new StringWriter();
 			char[] chars = new char[256];
 			int count = 0;
 			while ((count = reader.read(chars)) > 0) {
 				writer.write(chars, 0, count);
 			}
-
 			return writer.toString();
 		} finally {
 			try {
+				if (writer != null) {
+					writer.close();
+				}
 				if (reader != null) {
 					reader.close();
 				}
-				if (in != null) {
-					in.close();
+				if (streamReader != null) {
+					streamReader.close();
 				}
-				if (stream != null) {
-					stream.close();
+				if (inputStream != null) {
+					inputStream.close();
 				}
 			} catch (IOException e) {
 				log.error(ExceptionUtils.getStackTrace(e));
