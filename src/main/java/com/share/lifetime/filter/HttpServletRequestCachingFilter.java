@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.MediaType;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 public class HttpServletRequestCachingFilter implements Filter {
 
 	@Override
@@ -25,7 +22,6 @@ public class HttpServletRequestCachingFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		log.info("==========HttpServletRequestCachingFilter doFilter==========");
 		com.share.lifetime.filter.ContentCachingRequestWrapper requestCacheWrapperObject = null;
 		if (request instanceof HttpServletRequest) {
 			HttpServletRequest servletRequest = (HttpServletRequest) request;

@@ -79,7 +79,7 @@ public class WebUtils {
 	}
 
 	public static String getStreamAsString(InputStream stream) throws IOException {
-		return getStreamAsString(stream, "");
+		return getStreamAsString(stream, null);
 	}
 
 	public static String getStreamAsString(InputStream inputStream, String charset) throws IOException {

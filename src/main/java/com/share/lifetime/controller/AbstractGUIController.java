@@ -14,15 +14,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.share.lifetime.base.AjaxResult;
-import com.share.lifetime.base.RestApiResult;
 import com.share.lifetime.exception.BaseErrorCode;
 import com.share.lifetime.exception.BaseException;
-import com.share.lifetime.exception.BizException;
-import com.share.lifetime.exception.DAOException;
 import com.share.lifetime.exception.ErrorCode;
-import com.share.lifetime.exception.ParamException;
 import com.share.lifetime.exception.RestErrorCode;
 
 public class AbstractGUIController extends AbstractController {
@@ -36,11 +33,7 @@ public class AbstractGUIController extends AbstractController {
 
 	@Override
 	protected <T> AjaxResult<T> success(T result) {
-		AjaxResult<T> ajaxResult = new AjaxResult<T>();
-		ajaxResult.setCode(SUCCESS);
-		ajaxResult.setMsg("");
-		ajaxResult.setResult(result);
-		return ajaxResult;
+		return success(null, result);
 	}
 
 	@Override
@@ -49,7 +42,7 @@ public class AbstractGUIController extends AbstractController {
 		ajaxResult.setCode(SUCCESS);
 		ajaxResult.setMsg(msg);
 		ajaxResult.setResult(result);
-		return null;
+		return ajaxResult;
 	}
 
 	@Override
@@ -65,13 +58,25 @@ public class AbstractGUIController extends AbstractController {
 		AjaxResult<T> ajaxResult = new AjaxResult<T>();
 		ajaxResult.setCode(errorCode.getCode());
 		ajaxResult.setMsg(errorCode.getMsg());
+		if (errorCode instanceof RestErrorCode) {
+			RestErrorCode restErrorCode = (RestErrorCode) errorCode;
+			ajaxResult.setCode(errorCode.getCode() + "," + restErrorCode.getSubCode());
+			ajaxResult.setMsg(errorCode.getMsg() + "," + restErrorCode.getSubMsg());
+		}
 		return ajaxResult;
+	}
+
+	protected ModelAndView success(String viewName) {
+		ModelAndView mv = new ModelAndView(viewName);
+		return mv;
 	}
 
 	@ExceptionHandler({Exception.class})
 	protected @ResponseBody AjaxResult<Object> handleAllException(Exception ex, HttpServletRequest request) {
+		String message = ex.getMessage();
 		ErrorCode errCode = BaseErrorCode.SYS_ERROR;
 		AjaxResult<Object> failure = failure(errCode);
+		failure.setMsg(getDetailsInfo(failure.getMsg(), message));
 		LOG.error(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request),
 				errCode.getCode(), errCode.getMsg(), ex.getClass().getName()));
 		LOG.error(ExceptionUtils.getStackTrace(ex));
@@ -96,46 +101,72 @@ public class AbstractGUIController extends AbstractController {
 			int end = length;
 			errors.delete(start, end);
 		}
-		String msg = errors.toString();
+		String message = errors.toString();
 		BaseErrorCode errCode = BaseErrorCode.PARAM_ERROR;
 		AjaxResult<Object> failure = failure(errCode);
-		failure.setMsg(msg);
+		failure.setMsg(getDetailsInfo(failure.getMsg(), message));
 		LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request), errCode.getCode(),
 				errCode.getMsg(), ex.getClass().getName()));
 		LOG.error(ExceptionUtils.getStackTrace(ex));
 		return failure;
 	}
 
-	@ExceptionHandler({DAOException.class, BizException.class, ParamException.class})
-	protected @ResponseBody AjaxResult<Object> handleCustomException(BaseException ex, HttpServletRequest request) {
+	@ExceptionHandler({BaseException.class})
+	protected @ResponseBody AjaxResult<Object> handleCustomException(HttpServletRequest request, BaseException ex) {
 		String message = ex.getMessage();
-		if (StringUtils.isEmpty(message)) {
-			ErrorCode errCode = ex.getErrCode();
-			if (errCode instanceof RestErrorCode) {
-				RestErrorCode restErrorCode = (RestErrorCode) errCode;
-				AjaxResult<Object> failure = failure(restErrorCode);
-				LOG.info(String.format(LOG_EXCEPTION_TEMPLET2, request.getRequestURL(), getClientIp(request),
-						restErrorCode.getCode(), restErrorCode.getMsg(), restErrorCode.getSubCode(),
-						restErrorCode.getSubMsg(), ex.getClass().getName()));
-				LOG.error(ExceptionUtils.getStackTrace(ex));
-				return failure;
-			} else {
-				AjaxResult<Object> failure = failure(errCode);
-				LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request),
-						errCode.getCode(), errCode.getMsg(), ex.getClass().getName()));
-				LOG.error(ExceptionUtils.getStackTrace(ex));
-				return failure;
-			}
+		if (StringUtils.isEmpty(message)) {// BaseException(ErrorCode errCode)
+			return getFailure(request, ex);
 		} else {
-			AjaxResult<Object> failure = failure(message);
-			String code = failure.getCode();
-			String msg = failure.getMsg();
-			LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request), code, msg,
-					ex.getClass().getName()));
-			LOG.error(ExceptionUtils.getStackTrace(ex));
-			return failure;
+			return getFailure(request, ex, message);
 		}
 
 	}
 
+	private AjaxResult<Object> getFailure(HttpServletRequest request, BaseException ex) {
+		return getFailure(request, ex, null);
+	}
+
+	private AjaxResult<Object> getFailure(HttpServletRequest request, BaseException ex, final String reason) {
+		ErrorCode errCode = ex.getErrCode();
+		if (errCode instanceof BaseErrorCode) {
+			BaseErrorCode baseErrorCode = (BaseErrorCode) errCode;
+			AjaxResult<Object> failure = failure(baseErrorCode);
+			if (!StringUtils.isEmpty(reason)) {
+				failure.setMsg(getDetailsInfo(failure.getMsg(), reason));
+			}
+			LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request),
+					baseErrorCode.getCode(), baseErrorCode.getMsg(), ex.getClass().getName()));
+			LOG.error(ExceptionUtils.getStackTrace(ex));
+			return failure;
+		} else if (errCode instanceof RestErrorCode) {
+			RestErrorCode restErrorCode = (RestErrorCode) errCode;
+			AjaxResult<Object> failure = failure(restErrorCode);
+			if (!StringUtils.isEmpty(reason)) {
+				failure.setMsg(getDetailsInfo(failure.getMsg(), reason));
+			}
+			LOG.info(String.format(LOG_EXCEPTION_TEMPLET2, request.getRequestURL(), getClientIp(request),
+					restErrorCode.getCode(), restErrorCode.getMsg(), restErrorCode.getSubCode(),
+					restErrorCode.getSubMsg(), ex.getClass().getName()));
+			LOG.error(ExceptionUtils.getStackTrace(ex));
+			return failure;
+		} else {
+			return null;
+		}
+	}
+
+	private String getDetailsInfo(final String msg, final String detailsInfo) {
+		boolean flag = false;
+		StringBuilder builder = new StringBuilder(4);
+		if (!StringUtils.isEmpty(msg)) {
+			builder.append(msg);
+			flag = true;
+		}
+		if (flag) {
+			builder.append(detailsInfo);
+		} else {
+			builder.append("(").append(detailsInfo).append(")");
+
+		}
+		return builder.toString();
+	}
 }

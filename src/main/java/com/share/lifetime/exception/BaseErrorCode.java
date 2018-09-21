@@ -12,7 +12,7 @@ public enum BaseErrorCode implements ErrorCode {
 	/**
 	 * (数据库，缓存，消息等)
 	 */
-	INFRA_ERROR("3000", "基础设施错误"), SYS_ERROR("4000", "未知的其它系统错误");
+	INFRA_ERROR("3000", "基础设施错误"), SYS_ERROR("4000", "未知系统错误");
 
 
 	BaseErrorCode(String code, String msg) {

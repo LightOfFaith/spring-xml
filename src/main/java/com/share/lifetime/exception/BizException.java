@@ -9,8 +9,16 @@ public class BizException extends BaseException {
 		this.setErrCode(BaseErrorCode.BIZ_ERROR);
 	}
 
-	public BizException(String message, ErrorCode errCode) {
-		super(message);
-		this.setErrCode(errCode);
+	public BizException(ErrorCode errCode) {
+		super(errCode);
 	}
+
+	public BizException(String message, ErrorCode errCode) {
+		super(message, errCode);
+	}
+
+	public BizException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
 }

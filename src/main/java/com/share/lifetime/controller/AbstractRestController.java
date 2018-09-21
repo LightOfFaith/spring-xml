@@ -19,10 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.share.lifetime.base.RestApiResult;
 import com.share.lifetime.exception.BaseErrorCode;
 import com.share.lifetime.exception.BaseException;
-import com.share.lifetime.exception.BizException;
-import com.share.lifetime.exception.DAOException;
 import com.share.lifetime.exception.ErrorCode;
-import com.share.lifetime.exception.ParamException;
 import com.share.lifetime.exception.RestErrorCode;
 
 public class AbstractRestController extends AbstractController {
@@ -35,7 +32,7 @@ public class AbstractRestController extends AbstractController {
 
 	@Override
 	protected <T> RestApiResult<T> success(T result) {
-		return success("", result);
+		return success(null, result);
 	}
 
 	@Override
@@ -83,8 +80,10 @@ public class AbstractRestController extends AbstractController {
 
 	@ExceptionHandler({Exception.class})
 	protected @ResponseBody RestApiResult<Object> handleAllException(Exception ex, HttpServletRequest request) {
+		String message = ex.getMessage();
 		ErrorCode errCode = BaseErrorCode.SYS_ERROR;
 		RestApiResult<Object> failure = failure(errCode);
+		failure.setSubMsg(getDetailsInfo(failure.getSubMsg(), message));
 		LOG.error(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request),
 				errCode.getCode(), errCode.getMsg(), ex.getClass().getName()));
 		LOG.error(ExceptionUtils.getStackTrace(ex));
@@ -109,47 +108,74 @@ public class AbstractRestController extends AbstractController {
 			int end = length;
 			errors.delete(start, end);
 		}
-		String msg = errors.toString();
+		String message = errors.toString();
 		BaseErrorCode errCode = BaseErrorCode.PARAM_ERROR;
 		RestApiResult<Object> failure = failure(errCode);
 		failure.setSubCode(errCode.getCode());
-		failure.setSubMsg(msg);
+		failure.setSubMsg(getDetailsInfo(failure.getSubMsg(), message));
 		LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request), errCode.getCode(),
 				errCode.getMsg(), ex.getClass().getName()));
 		LOG.error(ExceptionUtils.getStackTrace(ex));
 		return failure;
 	}
 
-	@ExceptionHandler({DAOException.class, BizException.class, ParamException.class})
-	protected @ResponseBody RestApiResult<Object> handleCustomException(BaseException ex, HttpServletRequest request) {
+	@ExceptionHandler({BaseException.class})
+	protected @ResponseBody RestApiResult<Object> handleCustomException(HttpServletRequest request, BaseException ex) {
 		String message = ex.getMessage();
-		if (StringUtils.isEmpty(message)) {
-			ErrorCode errCode = ex.getErrCode();
-			if (errCode instanceof RestErrorCode) {
-				RestErrorCode restErrorCode = (RestErrorCode) errCode;
-				RestApiResult<Object> failure = failure(restErrorCode);
-				LOG.info(String.format(LOG_EXCEPTION_TEMPLET2, request.getRequestURL(), getClientIp(request),
-						restErrorCode.getCode(), restErrorCode.getMsg(), restErrorCode.getSubCode(),
-						restErrorCode.getSubMsg(), ex.getClass().getName()));
-				LOG.error(ExceptionUtils.getStackTrace(ex));
-				return failure;
-			} else {
-				RestApiResult<Object> failure = failure(errCode);
-				LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request),
-						errCode.getCode(), errCode.getMsg(), ex.getClass().getName()));
-				LOG.error(ExceptionUtils.getStackTrace(ex));
-				return failure;
-			}
+		if (StringUtils.isEmpty(message)) {// BaseException(ErrorCode errCode)
+			return getFailure(request, ex);
 		} else {
-			RestApiResult<Object> failure = failure(message);
-			String code = failure.getCode();
-			String msg = failure.getMsg();
-			LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request), code, msg,
-					ex.getClass().getName()));
-			LOG.error(ExceptionUtils.getStackTrace(ex));
-			return failure;
+			return getFailure(request, ex, message);
 		}
 
+	}
+
+	private RestApiResult<Object> getFailure(HttpServletRequest request, BaseException ex) {
+		return getFailure(request, ex, null);
+	}
+
+	private RestApiResult<Object> getFailure(HttpServletRequest request, BaseException ex, final String detailsInfo) {
+		ErrorCode errCode = ex.getErrCode();
+		if (errCode instanceof BaseErrorCode) {
+			BaseErrorCode baseErrorCode = (BaseErrorCode) errCode;
+			RestApiResult<Object> failure = failure(baseErrorCode);
+			if (!StringUtils.isEmpty(detailsInfo)) {
+				failure.setSubMsg(getDetailsInfo(failure.getSubMsg(), detailsInfo));
+			}
+			LOG.info(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request),
+					baseErrorCode.getCode(), baseErrorCode.getMsg(), ex.getClass().getName()));
+			LOG.error(ExceptionUtils.getStackTrace(ex));
+			return failure;
+		} else if (errCode instanceof RestErrorCode) {
+			RestErrorCode restErrorCode = (RestErrorCode) errCode;
+			RestApiResult<Object> failure = failure(restErrorCode);
+			if (!StringUtils.isEmpty(detailsInfo)) {
+				failure.setSubMsg(getDetailsInfo(failure.getSubMsg(), detailsInfo));
+			}
+			LOG.info(String.format(LOG_EXCEPTION_TEMPLET2, request.getRequestURL(), getClientIp(request),
+					restErrorCode.getCode(), restErrorCode.getMsg(), restErrorCode.getSubCode(),
+					restErrorCode.getSubMsg(), ex.getClass().getName()));
+			LOG.error(ExceptionUtils.getStackTrace(ex));
+			return failure;
+		} else {
+			return null;
+		}
+	}
+
+	private String getDetailsInfo(final String msg, final String detailsInfo) {
+		boolean flag = true;
+		StringBuilder builder = new StringBuilder(4);
+		if (!StringUtils.isEmpty(msg)) {
+			builder.append(msg);
+			flag = false;
+		}
+		if (flag) {
+			builder.append(detailsInfo);
+		} else {
+			builder.append("(").append(detailsInfo).append(")");
+
+		}
+		return builder.toString();
 	}
 
 }

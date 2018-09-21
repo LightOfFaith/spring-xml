@@ -53,13 +53,10 @@
 	</bean>
 
 	<!-- freemarker视图解析器 -->
-	<bean
-		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
-		<property name="cache" value="true"></property>
-		<property name="prefix" value="" />
-		<property name="suffix" value=".ftl" />
-		<property name="order" value="3" />
-	</bean>
+	<!-- <bean id="freeMarkerViewResolver" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver"> 
+		<property name="cache" value="true" /> <property name="prefix" value="" /> 
+		<property name="suffix" value=".ftl" /> <property name="order" value="3" 
+		/> </bean> -->
 
 	<!-- https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html -->
 	<!-- thymeleaf视图解析器 -->

@@ -5,7 +5,6 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.share.lifetime.base.RestApiResult;
 import com.share.lifetime.base.Result;
 import com.share.lifetime.exception.ErrorCode;
 import com.share.lifetime.util.WebUtils;
