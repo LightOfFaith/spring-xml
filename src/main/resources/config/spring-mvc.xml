@@ -176,4 +176,8 @@
 		<aop:advisor advice-ref="performanceMonitorInterceptor"
 			pointcut-ref="controller" />
 	</aop:config>
+
+	<!-- https://docs.spring.io/spring/docs/4.3.19.RELEASE/spring-framework-reference/htmlsingle/#websocket -->
+	<!-- WebSocket -->
+
 </beans>
