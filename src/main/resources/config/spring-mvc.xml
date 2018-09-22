@@ -21,11 +21,21 @@
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="viewClass"
 			value="org.springframework.web.servlet.view.JstlView" />
+		<!-- 默认为“true”：启用缓存。禁用缓存仅用于 调试与开发。 -->
+		<property name="cache" value="true" />
+		<!-- 指定视图缓存的最大条目数。 默认值为1024。 -->
+		<property name="cacheLimit" value="100" />
+		<!-- 视图名称一旦解析为null,都应该缓存并自动解析为null -->
+		<property name="cacheUnresolved" value="true" />
+		<!-- 为所有视图设置内容类型 -->
+		<property name="contentType" value="text/html;charset=UTF-8" />
 		<!-- 强烈建议将JSP文件放在目录下的'WEB-INF' 目录中，以便客户端无法直接访问。 -->
 		<property name="prefix" value="/WEB-INF/jsp/" />
 		<property name="suffix" value=".jsp" />
 		<property name="order" value="1" />
-		<property name="viewNames" value="*jsp" />
+		<!-- UrlBasedViewResolver.buildView(String viewName) view.setUrl(getPrefix() 
+			+ viewName + getSuffix()); -->
+		<!-- <property name="viewNames" value="*jsp" /> -->
 	</bean>
 
 	<!-- https://docs.spring.io/spring/docs/4.3.19.RELEASE/spring-framework-reference/htmlsingle/#view -->
@@ -59,8 +69,14 @@
 		/> </bean> -->
 
 	<!-- https://www.thymeleaf.org/doc/tutorials/3.0/thymeleafspring.html -->
+	<!-- TemplateResolver <- TemplateEngine <- ViewResolver -->
 	<!-- thymeleaf视图解析器 -->
-	<bean
+
+	<!-- <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver"> <property 
+		name="templateEngine" ref="templateEngine" /> <property name="order" value="4" 
+		/> <property name="viewNames" value="*.html,*.xhtml" /> </bean> -->
+
+	<bean id="templateResolver"
 		class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
 		<property name="prefix" value="/WEB-INF/templates/" />
 		<property name="suffix" value=".html" />
@@ -69,12 +85,17 @@
 		<property name="order" value="4" />
 	</bean>
 
-
+	<bean id="templateEngine"
+		class="org.thymeleaf.spring4.SpringTemplateEngine">
+		<!-- SpringTemplateEngine自动应用SpringStandardDialect并启用Spring自己的消息源消息解析机制。 -->
+		<property name="templateResolver" ref="templateResolver" />
+		<!-- 在大多数情况下，使用Spring 4.2.4或更新版本启用SpringEL编译器可以加快执行速度，但是在一个模板中的表达式在不同数据类型之间被重用时，可能与特定情况不兼容，因此缺省情况下，为了更安全的向后兼容性，此标志为“false”。 -->
+		<!-- <property name="enableSpringELCompiler" value="false"></property> -->
+	</bean>
 
 	<!-- 配置文件上传 -->
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-
 		<!-- 设置允许上传文件最大字节(bytes) 1MB -->
 		<property name="maxUploadSize" value="1048576" />
 	</bean>

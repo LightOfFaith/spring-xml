@@ -22,5 +22,7 @@ public abstract class Result<T> implements Serializable {
 	protected String msg;
 
 	protected T result;
+	
+	protected String timestamp;
 
 }

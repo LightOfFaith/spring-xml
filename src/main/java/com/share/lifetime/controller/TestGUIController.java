@@ -1,9 +1,13 @@
 package com.share.lifetime.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.share.lifetime.base.AjaxResult;
 import com.share.lifetime.exception.BizException;
@@ -28,5 +32,16 @@ public class TestGUIController extends AbstractGUIController {
 		throw new DAOException("语法错误");
 	}
 
+	@GetMapping("/testGUI")
+	public ModelAndView testGUI() {
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("gui", "hello gui");
+		return success("testgui", model);
+	}
+
+	@GetMapping("/testGUI1")
+	public String testGUI1() {
+		return "testgui";
+	}
 
 }

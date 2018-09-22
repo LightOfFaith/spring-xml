@@ -37,6 +37,8 @@
 				expression="org.springframework.stereotype.Controller" />
 		</context:component-scan>
 
+		<bean class="com.share.lifetime.common.ApplicationContextHelper" />
+
 		<bean class="com.share.lifetime.event.InitializationDataEvent" />
 
 		<!-- https://docs.spring.io/spring/docs/4.3.19.RELEASE/spring-framework-reference/htmlsingle/#mail -->
@@ -71,7 +73,8 @@
 		</bean>
 
 		<bean id="freeMarkerConfig"
-			class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer" scope="prototype">
+			class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer"
+			scope="prototype">
 			<property name="defaultEncoding" value="UTF-8" />
 			<property name="templateLoaderPath"
 				value="classpath:templates/freemarker/" />

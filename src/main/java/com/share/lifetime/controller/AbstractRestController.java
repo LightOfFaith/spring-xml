@@ -3,12 +3,14 @@ package com.share.lifetime.controller;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -16,6 +18,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.share.lifetime.base.ConfigConsts;
 import com.share.lifetime.base.RestApiResult;
 import com.share.lifetime.exception.BaseErrorCode;
 import com.share.lifetime.exception.BaseException;
@@ -78,19 +81,23 @@ public class AbstractRestController extends AbstractController {
 		return apiResult;
 	}
 
-	@ExceptionHandler({Exception.class})
-	protected @ResponseBody RestApiResult<Object> handleAllException(Exception ex, HttpServletRequest request) {
+	@ExceptionHandler({ Exception.class })
+	protected @ResponseBody RestApiResult<Object> handleAllException(HttpServletRequest request, Exception ex) {
 		String message = ex.getMessage();
 		ErrorCode errCode = BaseErrorCode.SYS_ERROR;
 		RestApiResult<Object> failure = failure(errCode);
-		failure.setSubMsg(getDetailsInfo(failure.getSubMsg(), message));
+		ServletContext servletContext = request.getServletContext();
+		String initParameter = servletContext.getInitParameter(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME);
+		if (ConfigConsts.TEST.equals(initParameter) || ConfigConsts.DEV.equals(initParameter)) {
+			failure.setSubMsg(getDetailsInfo(failure.getSubMsg(), message));
+		}
 		LOG.error(String.format(LOG_EXCEPTION_TEMPLET1, request.getRequestURL(), getClientIp(request),
 				errCode.getCode(), errCode.getMsg(), ex.getClass().getName()));
 		LOG.error(ExceptionUtils.getStackTrace(ex));
 		return failure;
 	}
 
-	@ExceptionHandler({BindException.class})
+	@ExceptionHandler({ BindException.class })
 	protected @ResponseBody RestApiResult<Object> handleBindException(BindException ex, HttpServletRequest request) {
 		BindingResult bindingResult = ex.getBindingResult();
 		List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -119,7 +126,7 @@ public class AbstractRestController extends AbstractController {
 		return failure;
 	}
 
-	@ExceptionHandler({BaseException.class})
+	@ExceptionHandler({ BaseException.class })
 	protected @ResponseBody RestApiResult<Object> handleCustomException(HttpServletRequest request, BaseException ex) {
 		String message = ex.getMessage();
 		if (StringUtils.isEmpty(message)) {// BaseException(ErrorCode errCode)
