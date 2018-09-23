@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<aop:aspectj-autoproxy proxy-target-class="false" />
+
+	<bean class="com.share.lifetime.aop.aspect.LogAspect" />
+
+	<bean id="loggerInterceptor"
+		class="com.share.lifetime.interceptor.LoggerInterceptor">
+		<property name="showLog" value="true"></property>
+	</bean>
+
+	<bean id="performanceMonitorInterceptor"
+		class="com.share.lifetime.interceptor.PerformanceMonitorInterceptor">
+		<property name="useDynamicLogger" value="false" />
+	</bean>
+
+	<aop:config>
+		<aop:pointcut
+			expression="execution(* com.share.lifetime..*.*(..))"
+			id="controller" />
+		<aop:advisor advice-ref="performanceMonitorInterceptor"
+			pointcut-ref="controller" />
+	</aop:config>
+
+</beans>

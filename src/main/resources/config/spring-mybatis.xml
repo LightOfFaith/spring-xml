@@ -9,21 +9,14 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 
-	<beans profile="test">
-		<context:property-placeholder
-			ignore-resource-not-found="true"
-			location="classpath:config/test/db.properties" />
-	</beans>
-	<beans profile="dev">
-		<context:property-placeholder
-			ignore-resource-not-found="true"
-			location="classpath:config/dev/db.properties" />
-	</beans>
-	<beans profile="pro">
-		<context:property-placeholder
-			ignore-resource-not-found="true"
-			location="classpath:config/pro/db.properties" />
-	</beans>
+	<!-- Test -->
+	<!-- <beans profile="test"> <context:property-placeholder file-encoding="UTF-8" 
+		ignore-resource-not-found="true" location="classpath:config/test/db.properties" 
+		/> </beans> <beans profile="dev"> <context:property-placeholder file-encoding="UTF-8" 
+		ignore-resource-not-found="true" location="classpath:config/dev/db.properties" 
+		/> </beans> <beans profile="pro"> <context:property-placeholder file-encoding="UTF-8" 
+		ignore-resource-not-found="true" location="classpath:config/pro/db.properties" 
+		/> </beans> -->
 
 	<beans profile="test,dev,pro">
 

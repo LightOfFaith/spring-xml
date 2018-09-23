@@ -8,7 +8,7 @@
 	<beans profile="test">
 		<!-- classpath:config/test/db.properties, -->
 		<context:property-placeholder
-			ignore-resource-not-found="true"
+			file-encoding="UTF-8" ignore-resource-not-found="true"
 			location="classpath:config/test/db.properties,
 			classpath:config/test/mail.properties" />
 	</beans>
@@ -16,7 +16,7 @@
 	<beans profile="dev">
 		<!-- classpath:config/dev/db.properties, -->
 		<context:property-placeholder
-			ignore-resource-not-found="true"
+			file-encoding="UTF-8" ignore-resource-not-found="true"
 			location="classpath:config/dev/db.properties,
 			classpath:config/dev/mail.properties" />
 	</beans>
@@ -24,7 +24,7 @@
 	<beans profile="pro">
 		<!-- classpath:config/pro/db.properties, -->
 		<context:property-placeholder
-			ignore-resource-not-found="true"
+			file-encoding="UTF-8" ignore-resource-not-found="true"
 			location="classpath:config/pro/db.properties,
 			classpath:config/pro/mail.properties" />
 	</beans>
