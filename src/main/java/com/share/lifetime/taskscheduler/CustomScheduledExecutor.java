@@ -6,7 +6,6 @@ public class CustomScheduledExecutor extends ScheduledThreadPoolExecutor {
 
 	public CustomScheduledExecutor(int corePoolSize) {
 		super(corePoolSize);
-		// TODO Auto-generated constructor stub
 	}
 
 }

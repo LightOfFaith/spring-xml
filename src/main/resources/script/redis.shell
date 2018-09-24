@@ -1,0 +1,10 @@
+##关闭Linux防火墙
+systemctl stop firewalld.service
+
+##Linux--redis作为守护进程启动运行
+./redis-server ../redis.conf &
+
+./redis-cli -h 192.168.43.145 -p 6379 -a redis --raw
+
+##Linux--关闭redis应用
+./redis-cli -h 192.168.43.145 -p 6379 -a redis shutdown

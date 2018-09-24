@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
+
+	<beans profile="test">
+		<context:property-placeholder
+			file-encoding="UTF-8" ignore-resource-not-found="true"
+			location="classpath:config/test/redis.properties" />
+	</beans>
+
+	<beans profile="test,dev,pro">
+		<bean id="genericJackson2JsonRedisSerializer"
+			class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer" />
+
+		<bean id="jedisPoolConfig"
+			class="redis.clients.jedis.JedisPoolConfig">
+		</bean>
+
+
+
+		<!-- <bean id="redisSentinelConfiguration" class="org.springframework.data.redis.connection.RedisSentinelConfiguration"> 
+			<property name="database" value="${redis.database}" /> <property name="master" 
+			value="" /> <property name="password" value="${redis.password}" /> <property 
+			name="sentinels"> <set> <bean class="org.springframework.data.redis.connection.RedisNode"> 
+			<constructor-arg name="host" value="" /> <constructor-arg name="port" value="" 
+			/> <property name="id" value="" /> <property name="name" value="" /> </bean> 
+			</set> </property> </bean> -->
+
+
+
+
+		<!-- https://docs.spring.io/spring-data/redis/docs/1.8.15.RELEASE/reference/html/ -->
+		<bean id="jedisConnectionFactory"
+			class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+			<property name="clientName" value="${redis.clientName}" />
+			<property name="convertPipelineAndTxResults" value="true" />
+			<property name="database" value="${redis.database}" />
+			<property name="hostName" value="${redis.hostName}" />
+			<property name="password" value="${redis.password}" />
+			<property name="poolConfig" ref="jedisPoolConfig" />
+			<property name="port" value="${redis.port}" />
+			<!-- <property name="shardInfo" value="" /> <property name="timeout" value="" 
+				/> <property name="usePool" value="" /> <property name="useSsl" value="" 
+				/> -->
+		</bean>
+
+		<bean id="redisTemplate"
+			class="org.springframework.data.redis.core.RedisTemplate">
+			<property name="connectionFactory"
+				ref="jedisConnectionFactory" />
+			<property name="defaultSerializer"
+				ref="genericJackson2JsonRedisSerializer" />
+			<property name="enableDefaultSerializer" value="false" />
+			<!-- <property name="enableTransactionSupport" value="" /> -->
+			<property name="keySerializer">
+				<bean
+					class="org.springframework.data.redis.serializer.StringRedisSerializer">
+					<constructor-arg name="charset" value="UTF-8" />
+				</bean>
+			</property>
+			<property name="valueSerializer"
+				ref="genericJackson2JsonRedisSerializer" />
+		</bean>
+	</beans>
+
+
+
+</beans>
