@@ -81,7 +81,7 @@ public class AbstractRestController extends AbstractController {
 		return apiResult;
 	}
 
-	@ExceptionHandler({ Exception.class })
+	@ExceptionHandler({Exception.class})
 	protected @ResponseBody RestApiResult<Object> handleAllException(HttpServletRequest request, Exception ex) {
 		String message = ex.getMessage();
 		ErrorCode errCode = BaseErrorCode.SYS_ERROR;
@@ -97,7 +97,7 @@ public class AbstractRestController extends AbstractController {
 		return failure;
 	}
 
-	@ExceptionHandler({ BindException.class })
+	@ExceptionHandler({BindException.class})
 	protected @ResponseBody RestApiResult<Object> handleBindException(BindException ex, HttpServletRequest request) {
 		BindingResult bindingResult = ex.getBindingResult();
 		List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -126,7 +126,7 @@ public class AbstractRestController extends AbstractController {
 		return failure;
 	}
 
-	@ExceptionHandler({ BaseException.class })
+	@ExceptionHandler({BaseException.class})
 	protected @ResponseBody RestApiResult<Object> handleCustomException(HttpServletRequest request, BaseException ex) {
 		String message = ex.getMessage();
 		if (StringUtils.isEmpty(message)) {// BaseException(ErrorCode errCode)
@@ -170,16 +170,18 @@ public class AbstractRestController extends AbstractController {
 	}
 
 	private String getDetailsInfo(final String msg, final String detailsInfo) {
-		boolean flag = true;
+		boolean flag = false;
 		StringBuilder builder = new StringBuilder(4);
 		if (!StringUtils.isEmpty(msg)) {
 			builder.append(msg);
-			flag = false;
+			flag = true;
 		}
 		if (flag) {
-			builder.append(detailsInfo);
+			if (!StringUtils.isEmpty(detailsInfo)) {
+				builder.append("(").append(detailsInfo).append(")");
+			}
 		} else {
-			builder.append("(").append(detailsInfo).append(")");
+			builder.append(detailsInfo);
 
 		}
 		return builder.toString();

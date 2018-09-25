@@ -9,8 +9,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.Signature;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -25,7 +23,7 @@ import com.share.lifetime.util.MapUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Aspect
+// @Aspect
 public class LogAspect {
 
 	private static final String UNKNOWN = "Unkown";
@@ -34,7 +32,7 @@ public class LogAspect {
 
 	private static final String REST_LOG_TEMPLATE = "REST API:[%s] path:[%s] is called by IP:[%s], result is %s.";
 
-	@Around("@annotation(logAnno)")
+	// @Around("@annotation(logAnno)")
 	public Object log(ProceedingJoinPoint joinPoint, Log logAnno) throws Throwable {
 		addLogParamsIfPossible(joinPoint);
 		String methodName = getMethodName(joinPoint, logAnno);

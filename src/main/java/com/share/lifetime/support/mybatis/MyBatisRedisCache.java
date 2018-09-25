@@ -79,4 +79,9 @@ public class MyBatisRedisCache implements Cache {
 		MyBatisRedisCache.redisTemplate = redisTemplate;
 	}
 
+	@Override
+	public String toString() {
+		return "MyBatisRedisCache [id=" + id + "]";
+	}
+
 }

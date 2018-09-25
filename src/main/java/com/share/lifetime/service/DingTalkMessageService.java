@@ -7,8 +7,5 @@ package com.share.lifetime.service;
  */
 public interface DingTalkMessageService extends MessageService {
 
-
-	void sendMessage(com.dingtalk.chatbot.message.Message message) throws Exception;
-
 	void sendMessage(String webhook, com.dingtalk.chatbot.message.Message message) throws Exception;
 }

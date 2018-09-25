@@ -23,19 +23,15 @@ public class DingTalkMessageServiceImpl implements DingTalkMessageService {
 	public void sendMessage(Message message) throws IOException {
 		if (message instanceof DingTalkMarkdownMessage) {
 			DingTalkMarkdownMessage dingTalkMarkdownMessage = (DingTalkMarkdownMessage) message;
+			String webhook = dingTalkMarkdownMessage.getWebhook();
 			MarkdownMessage markdownMessage = new MarkdownMessage();
 			markdownMessage.setTitle(dingTalkMarkdownMessage.getTitle());
 			List<String> items = dingTalkMarkdownMessage.getItems();
 			for (String item : items) {
 				markdownMessage.add(item);
 			}
-			sendMessage(markdownMessage);
+			sendMessage(webhook, markdownMessage);
 		}
-	}
-
-	@Override
-	public void sendMessage(com.dingtalk.chatbot.message.Message message) throws IOException {
-		sendMessage(DingTalkConsts.CHATBOT_WEBHOOK, message);
 	}
 
 	@Override

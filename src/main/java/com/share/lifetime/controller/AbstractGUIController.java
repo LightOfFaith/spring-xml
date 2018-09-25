@@ -31,7 +31,7 @@ import com.share.lifetime.exception.RestErrorCode;
 
 public class AbstractGUIController extends AbstractController {
 
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractRestController.class);
+	private static final Logger LOG = LoggerFactory.getLogger(AbstractGUIController.class);
 
 	public static final String REDIRECT_URL_PREFIX = "redirect:";
 
@@ -90,7 +90,7 @@ public class AbstractGUIController extends AbstractController {
 		return mv;
 	}
 
-	@ExceptionHandler({ Exception.class })
+	@ExceptionHandler({Exception.class})
 	protected @ResponseBody AjaxResult<Object> handleAllException(Exception ex, HttpServletRequest request) {
 		String message = ex.getMessage();
 		ErrorCode errCode = BaseErrorCode.SYS_ERROR;
@@ -106,7 +106,7 @@ public class AbstractGUIController extends AbstractController {
 		return failure;
 	}
 
-	@ExceptionHandler({ BindException.class })
+	@ExceptionHandler({BindException.class})
 	protected @ResponseBody AjaxResult<Object> handleBindException(BindException ex, HttpServletRequest request) {
 		BindingResult bindingResult = ex.getBindingResult();
 		List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -134,7 +134,7 @@ public class AbstractGUIController extends AbstractController {
 		return failure;
 	}
 
-	@ExceptionHandler({ BaseException.class })
+	@ExceptionHandler({BaseException.class})
 	protected @ResponseBody AjaxResult<Object> handleCustomException(HttpServletRequest request, BaseException ex) {
 		String message = ex.getMessage();
 		if (StringUtils.isEmpty(message)) {// BaseException(ErrorCode errCode)
@@ -185,9 +185,11 @@ public class AbstractGUIController extends AbstractController {
 			flag = true;
 		}
 		if (flag) {
-			builder.append(detailsInfo);
+			if (!StringUtils.isEmpty(detailsInfo)) {
+				builder.append("(").append(detailsInfo).append(")");
+			}
 		} else {
-			builder.append("(").append(detailsInfo).append(")");
+			builder.append(detailsInfo);
 
 		}
 		return builder.toString();
