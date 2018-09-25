@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.dingtalk.chatbot.DingtalkChatbotClient;
 import com.dingtalk.chatbot.SendResult;
 import com.dingtalk.chatbot.message.MarkdownMessage;
-import com.share.lifetime.constant.DingTalkConsts;
 import com.share.lifetime.domain.DingTalkMarkdownMessage;
 import com.share.lifetime.domain.Message;
 import com.share.lifetime.service.DingTalkMessageService;

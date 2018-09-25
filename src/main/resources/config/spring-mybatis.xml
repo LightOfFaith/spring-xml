@@ -110,9 +110,13 @@
 			<tx:attributes>
 				<tx:method name="get*" read-only="true"
 					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="find*" read-only="true"
+					propagation="REQUIRED" rollback-for="Throwable" />
 				<tx:method name="list*" read-only="true"
 					propagation="REQUIRED" rollback-for="Throwable" />
 				<tx:method name="count*" read-only="true"
+					propagation="REQUIRED" rollback-for="Throwable" />
+				<tx:method name="exists*" read-only="true"
 					propagation="REQUIRED" rollback-for="Throwable" />
 				<tx:method name="save*" read-only="false"
 					propagation="REQUIRED" rollback-for="Throwable" />

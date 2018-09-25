@@ -2,6 +2,8 @@ package com.share.lifetime.entity;
 
 import java.util.Date;
 
+import com.share.lifetime.util.JsonUtils;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,27 +17,11 @@ public abstract class Entity {
 	protected String creator;
 	protected String modifier;
 	protected String isDeleted;
-	protected String bizCode;
+	protected String code;
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Entity [id=");
-		builder.append(id);
-		builder.append(", gmtCreate=");
-		builder.append(gmtCreate);
-		builder.append(", gmtModified=");
-		builder.append(gmtModified);
-		builder.append(", creator=");
-		builder.append(creator);
-		builder.append(", modifier=");
-		builder.append(modifier);
-		builder.append(", isDeleted=");
-		builder.append(isDeleted);
-		builder.append(", bizCode=");
-		builder.append(bizCode);
-		builder.append("]");
-		return builder.toString();
+		return JsonUtils.toJson(this);
 	}
 
 }
