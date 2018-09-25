@@ -1,12 +1,14 @@
 package com.share.lifetime.aop.aspect;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.Signature;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
@@ -34,7 +36,6 @@ public class LogAspect {
 
 	@Around("@annotation(logAnno)")
 	public Object log(ProceedingJoinPoint joinPoint, Log logAnno) throws Throwable {
-
 		addLogParamsIfPossible(joinPoint);
 		String methodName = getMethodName(joinPoint, logAnno);
 		Boolean isSuccess = Boolean.FALSE;
@@ -52,25 +53,34 @@ public class LogAspect {
 		if (StringUtils.isNotBlank(logAnno.name())) {
 			return logAnno.name();
 		}
-		return joinPoint.getSignature().getName();
+		Signature signature = joinPoint.getSignature();
+		return signature.getName();
 	}
 
 	private void addLogParamsIfPossible(ProceedingJoinPoint joinPoint) {
-		MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-		Annotation[][] annotations = signature.getMethod().getParameterAnnotations();
-		int i = 0;
-		for (Object arg : joinPoint.getArgs()) {
-			for (Annotation annotation : annotations[i]) {
-				if (annotation.annotationType() == LogParam.class) {
-					LogParam logParamAnno = (LogParam) annotation;
-					String value = logParamAnno.value();
-					if (value != null) {
-						LogContext.put(value, arg == null ? null : arg.toString());
+		Signature signature = joinPoint.getSignature();
+		if (signature instanceof MethodSignature) {
+			MethodSignature methodSignature = (MethodSignature) signature;
+			Method method = methodSignature.getMethod();
+			Annotation[][] annotations = method.getParameterAnnotations();
+			Object[] args = joinPoint.getArgs();
+			Class<? extends Annotation> annotationType;
+			int i = 0;
+			for (Object arg : args) {
+				for (Annotation annotation : annotations[i]) {
+					annotationType = annotation.annotationType();
+					if (LogParam.class == annotationType) {
+						LogParam logParamAnno = (LogParam) annotation;
+						String value = logParamAnno.value();
+						if (value != null) {
+							LogContext.put(value, arg == null ? null : arg.toString());
+						}
 					}
 				}
+				i++;
 			}
-			i++;
 		}
+
 	}
 
 	private void log(Boolean isSuccess, LogType logType, String methodName) {
@@ -113,7 +123,8 @@ public class LogAspect {
 		if (request == null) {
 			return StringUtils.EMPTY;
 		}
-		return request.getRequestURI();
+		StringBuffer requestURL = request.getRequestURL();
+		return requestURL.toString();
 	}
 
 	private String getIpAddress() {
