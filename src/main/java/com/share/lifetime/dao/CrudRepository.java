@@ -1,4 +1,4 @@
-package com.share.lifetime.repository;
+package com.share.lifetime.dao;
 
 import com.share.lifetime.domain.Query;
 import com.share.lifetime.entity.Entity;

@@ -151,7 +151,7 @@
 		<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 			<!-- 为映射器接口文件设置基本的包路径。 你可以使用分号或逗号 作为分隔符设置多于一个的包路径。每个映射器将会在指定的包路径中递归地被搜索到。 -->
 			<property name="basePackage"
-				value="com.share.lifetime.repository" />
+				value="com.share.lifetime.dao" />
 			<property name="sqlSessionFactoryBeanName"
 				value="sqlSessionFactory" />
 			<!-- 指定了要寻找的注解名称 -->
