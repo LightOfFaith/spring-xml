@@ -39,7 +39,19 @@
 
 		<bean class="com.share.lifetime.common.ApplicationContextHelper" />
 
-		<bean class="com.share.lifetime.event.InitializationDataEvent" />
+		<!-- <bean class="com.share.lifetime.event.InitializationDataEvent" /> -->
+
+		<bean
+			class="com.share.lifetime.listener.ApplicationContextStartedListener" />
+
+		<bean
+			class="com.share.lifetime.listener.ApplicationContextRefreshedListener" />
+
+		<bean
+			class="com.share.lifetime.listener.ApplicationContextStoppedListener" />
+
+		<bean
+			class="com.share.lifetime.listener.ApplicationContextClosedListener" />
 
 		<!-- https://docs.spring.io/spring/docs/4.3.19.RELEASE/spring-framework-reference/htmlsingle/#mail -->
 		<bean id="mailSender"

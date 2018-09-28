@@ -13,6 +13,10 @@ public class ApplicationContextHelper implements ApplicationContextAware {
 		ApplicationContextHelper.applicationContext = applicationContext;
 	}
 
+	public static ApplicationContext getParentApplicationContext() {
+		return applicationContext.getParent();
+	}
+
 	public static ApplicationContext getApplicationContext() {
 		return applicationContext;
 	}

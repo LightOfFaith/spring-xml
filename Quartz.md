@@ -1,3 +1,6 @@
+https://docs.spring.io/spring-framework/docs/
+https://docs.spring.io/spring-framework/docs/4.3.18.RELEASE/javadoc-api/
+
 1.elasticjob(http://elasticjob.io/docs/elastic-job-lite/00-overview/)
 
 Quartz Examples(http://www.quartz-scheduler.org/documentation/quartz-2.2.x/examples/Example3.html)
@@ -8,7 +11,7 @@ Quartz Examples(http://www.quartz-scheduler.org/documentation/quartz-2.2.x/examp
 “,”字符用于指定额外值，例如“MON,WED,FRI”在day-of-week字段中，表示“星期一、星期三和星期五”
 “/”字符用于指定增量，例如Seconds字段中的“0/15”，表示“秒0, 15, 30和45”
 “L”字符用于Day-of-month字段、Day-of-Week字段，这个字符是“最后(last)”的缩写。例如：在Day-of-month字段中的值“L”意味着“月的最后一天”——1月的第31天，非闰年2月的第28天。如果在Day-of-Week使用，它简单的意思是“7”或“SAT(星期六)”
-“W”字符用于Day-of-month字段，用于指定离给定日期最近的工作日Monday-Friday(周一到周五)例如，Day-of-month字段中的值“15W”，意味着“从最近的工作日到本月15日”。
+“W”字符用于Day-of-month字段，用于指定离给定日期最近的工作日Monday-Friday(周一到周五)。例如，Day-of-month字段中的值“15W”，意味着“从最近的工作日到本月15日”。
 “LW”字符用于Day-of-month字段，例如：Day-of-month字段中的值“LW”，意味着“每月的最后一个工作日”。
 “#”字符用于Day-of-Week字段，用来指定“第n个”XXX日的月份。例如，Day-of-Week字段中的“6#3”的值表示月份的第三个星期五（第6天=星期五(Friday)，3=月份的第三个）。
 字段名				允许值					允许特殊字符
