@@ -43,6 +43,11 @@ public class Exception {
 	 */
 	private String time;
 
+	/**
+	 * 备注
+	 */
+	private String remark;
+
 	public Exception(String instance, String condition, ErrorCode errorCode, String project, String time) {
 		super();
 		this.instance = instance;
