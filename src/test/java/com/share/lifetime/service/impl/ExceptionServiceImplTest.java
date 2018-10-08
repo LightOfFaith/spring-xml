@@ -70,7 +70,7 @@ public class ExceptionServiceImplTest {
 		message.setTitle("****告警信息****");
 		Exception exception = new Exception("192.168.0.1", "未配置子商户费率！！请及时查阅重新提交！！", errorCode, "Pay",
 				DateFormatUtils.formatDate(DateFormatUtils.PATTERN_DEFAULT_ON_SECOND, new Date()));
-		message.setItems(MessageTemplateUtils.listExceptionToTemplate(exception));
+		message.setItems(MessageTemplateUtils.getExceptionToTemplate(exception));
 		exceptionService.handlerException(message, exception, dingTalkMessageService);
 	}
 
