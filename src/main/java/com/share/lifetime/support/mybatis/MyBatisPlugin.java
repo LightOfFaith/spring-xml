@@ -29,7 +29,7 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
+//import org.apache.tomcat.dbcp.dbcp2.BasicDataSource;
 import org.mybatis.spring.transaction.SpringManagedTransaction;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.util.ReflectionUtils;
@@ -39,17 +39,17 @@ import com.alibaba.druid.pool.DruidDataSource;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- *  对MyBatis进行拦截，添加监控
- * 目前仅支持RoutingDataSource和Druid组合配置的数据源
- * @author 
+ * 对MyBatis进行拦截，添加监控 目前仅支持RoutingDataSource和Druid组合配置的数据源
+ * 
+ * @author
  * @see https://github.com/dianping/cat/blob/master/%E6%A1%86%E6%9E%B6%E5%9F%8B%E7%82%B9%E6%96%B9%E6%A1%88%E9%9B%86%E6%88%90/mybatis/CatMybatisPlugin.java
  *
  */
 @Slf4j
 @Intercepts({
-		@Signature(method = "query", type = Executor.class, args = {MappedStatement.class, Object.class,
-				RowBounds.class, ResultHandler.class}),
-		@Signature(method = "update", type = Executor.class, args = {MappedStatement.class, Object.class})})
+		@Signature(method = "query", type = Executor.class, args = { MappedStatement.class, Object.class,
+				RowBounds.class, ResultHandler.class }),
+		@Signature(method = "update", type = Executor.class, args = { MappedStatement.class, Object.class }) })
 public class MyBatisPlugin implements Interceptor {
 
 	private static final String EMPTY_CONNECTION = "jdbc:mysql://unknown:3306/%s?useUnicode=true";
@@ -137,9 +137,9 @@ public class MyBatisPlugin implements Interceptor {
 			} else {
 				log.error("---only surpport DruidDataSource:" + dataSource1.getClass().toString());
 			}
-		} else if (dataSource instanceof BasicDataSource) {
-			return ((BasicDataSource) dataSource).getUrl();
-		}
+		} // else if (dataSource instanceof BasicDataSource) {
+//			return ((BasicDataSource) dataSource).getUrl();
+//		}
 		return null;
 	}
 
@@ -172,6 +172,7 @@ public class MyBatisPlugin implements Interceptor {
 
 	/**
 	 * 解析sql语句
+	 * 
 	 * @param configuration
 	 * @param boundSql
 	 * @return
@@ -204,6 +205,7 @@ public class MyBatisPlugin implements Interceptor {
 
 	/**
 	 * 参数解析
+	 * 
 	 * @param parameterObject
 	 * @return
 	 */

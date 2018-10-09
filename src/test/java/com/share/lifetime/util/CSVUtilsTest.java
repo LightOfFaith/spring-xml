@@ -15,7 +15,7 @@ public class CSVUtilsTest {
 		try {
 			File file = ResourceUtils.getFile("classpath:20181018-20181018.csv");
 			String path = file.getPath();
-			List<Map<String, String>> parseExcelCSVFile = CSVUtils.parseExcelCSVFile("GBK", path, null);
+			List<Map<String, String>> parseExcelCSVFile = CSVUtils.parseExcelCSVFile("GBK", path);
 			// for (Map<String, String> map : parseExcelCSVFile) {
 			// System.out.println(map.toString());
 			// }

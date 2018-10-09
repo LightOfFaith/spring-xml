@@ -536,6 +536,13 @@
 		</dependency>
 		<!-- kettle end -->
 
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.8</version>
+		</dependency>
+
+
 	</dependencies>
 	<build>
 		<!-- http://maven.apache.org/pom.html -->

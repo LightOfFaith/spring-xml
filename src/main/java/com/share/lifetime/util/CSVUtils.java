@@ -29,24 +29,33 @@ public class CSVUtils {
 	 */
 	private static final String DEFAULT_CHARSET = StandardCharsets.UTF_8.name();//
 
-
 	/**
 	 * 
 	 * @param fileName 读取文件的名称 "path/to/file.csv"
-	 * @param header 标题，null则禁用，如果为empty，则自动解析，否则用户指定规则
 	 * @return
 	 * @throws IOException
 	 */
-	public static List<Map<String, String>> parseExcelCSVFile(final String fileName, final String... header)
-			throws IOException {
-		return parseExcelCSVFile(DEFAULT_CHARSET, fileName, header);
+	public static List<Map<String, String>> parseExcelCSVFile(final String fileName) throws IOException {
+		return parseExcelCSVFile(DEFAULT_CHARSET, fileName);
 	}
 
 	/**
 	 * 
 	 * @param charsetName 文件字符集编码
-	 * @param fileName 读取文件的名称 "path/to/file.csv"
-	 * @param header 标题，null则禁用，如果为empty，则自动解析，否则用户指定规则
+	 * @param fileName    读取文件的名称 "path/to/file.csv"
+	 * @return
+	 * @throws IOException
+	 */
+	public static List<Map<String, String>> parseExcelCSVFile(final String charsetName, final String fileName)
+			throws IOException {
+		return parseExcelCSVFile(charsetName, fileName, new String[] {});
+	}
+
+	/**
+	 * 
+	 * @param charsetName 文件字符集编码
+	 * @param fileName    读取文件的名称 "path/to/file.csv"
+	 * @param header      标题，null则禁用，如果为empty，则自动解析，否则用户指定规则
 	 * @return
 	 * @throws IOException
 	 */
