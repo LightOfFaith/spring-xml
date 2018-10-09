@@ -50,6 +50,7 @@
 		<quartz.version>2.3.0</quartz.version>
 		<quartz-jobs.version>2.3.0</quartz-jobs.version>
 		<jedis.version>2.9.0</jedis.version>
+		<redisson.version>3.7.0</redisson.version>
 
 		<dao.target.dir>src/main/java</dao.target.dir>
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -422,6 +423,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.redisson</groupId>
+			<artifactId>redisson</artifactId>
+			<version>${redisson.version}</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>org.mybatis.caches</groupId>
 			<artifactId>mybatis-redis</artifactId>
 			<version>1.0.0-beta2</version>
@@ -447,6 +455,24 @@
 			<version>1.3.7</version>
 		</dependency>
 
+		<!-- kettle start -->
+		<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-engine</artifactId>
+			<version>7.1.0.0-12</version>
+		</dependency>
+		<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-core</artifactId>
+			<version>7.1.0.0-12</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.sourceforge.jexcelapi</groupId>
+			<artifactId>jxl</artifactId>
+			<version>2.6.12</version>
+		</dependency>
+		<!-- kettle end -->
 
 	</dependencies>
 	<build>
@@ -510,4 +536,18 @@
 
 		</plugins>
 	</build>
+
+	<repositories>
+		<repository>
+			<id>pentaho-public</id>
+			<name>Pentaho Public</name>
+			<url>http://nexus.pentaho.org/content/groups/omni</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 </project>
