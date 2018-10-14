@@ -9,7 +9,7 @@
 		location="D:/ProgramFiles/maven_repository/mysql/mysql-connector-java/6.0.6/mysql-connector-java-6.0.6.jar" />
 
 	<context id="MySQLTables" defaultModelType="flat"
-		targetRuntime="MyBatis3Simple">
+		targetRuntime="MyBatis3">
 		<!-- defaultModelType：conditional、flat、hierarchical -->
 		<!-- targetRuntime：MyBatis3、MyBatis3Simple、MyBatis3DynamicSql、 -->
 
@@ -27,8 +27,8 @@
 			value="org.mybatis.generator.api.dom.DefaultJavaFormatter" />
 
 		<!-- 格式化Xml文件 -->
-		<property name="xmlFormatter"
-			value="org.mybatis.generator.api.dom.DefaultXmlFormatter" />
+		<!-- <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter" 
+			/> -->
 
 		<commentGenerator>
 			<!-- 代码中是否包含任何注释(true时，不会往生成的元素中添加任何注释。) -->
@@ -60,7 +60,7 @@
 		<sqlMapGenerator
 			targetPackage="com.share.lifetime.mapper"
 			targetProject="D:/Users/hasee/git/spring-xml/target">
-			<property name="enableSubPackages" value="true" />
+			<!-- <property name="enableSubPackages" value="true" /> -->
 		</sqlMapGenerator>
 
 		<javaClientGenerator type="XMLMAPPER"
@@ -70,7 +70,7 @@
 		</javaClientGenerator>
 
 		<table schema="admin" tableName="user" domainObjectName="User">
-			<!-- <property name="useActualColumnNames" value="true" /> -->
+			<property name="useActualColumnNames" value="true" />
 			<generatedKey column="id" sqlStatement="MySql"
 				identity="true" />
 			<!-- <columnOverride column="DATE_FIELD" property="startDate" /> <ignoreColumn 

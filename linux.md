@@ -19,3 +19,12 @@ set /zk_test junk
 delete /zk_test
 
 help
+
+vi /etc/profile
+
+#set java environment
+export JAVA_HOME=/usr/java/jdk/jdk1.8.0_121
+export JRE_HOME=/usr/java/jdk/jdk1.8.0_121/jre
+export CLASSPATH=.:$JAVA_HOME/lib$:JRE_HOME/lib:$CLASSPATH
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin/$JAVA_HOME:$PATH
+source /etc/profile

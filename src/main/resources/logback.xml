@@ -203,6 +203,10 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+	<logger name="org.apache.http" level="DEBUG" additivity="false">
+		<appender-ref ref="STDOUT" />
+	</logger>
+
 	<logger name="druid.sql.DataSource" level="DEBUG"
 		additivity="false">
 		<appender-ref ref="DruidSqlRollingFile" />

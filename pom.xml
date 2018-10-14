@@ -539,6 +539,16 @@
 
 	<repositories>
 		<repository>
+			<id>aliyun-public</id>
+			<url>https://maven.aliyun.com/repository/central</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
 			<id>pentaho-public</id>
 			<name>Pentaho Public</name>
 			<url>http://nexus.pentaho.org/content/groups/omni</url>
