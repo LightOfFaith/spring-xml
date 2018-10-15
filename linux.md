@@ -28,3 +28,8 @@ export JRE_HOME=/usr/java/jdk/jdk1.8.0_121/jre
 export CLASSPATH=.:$JAVA_HOME/lib$:JRE_HOME/lib:$CLASSPATH
 export PATH=$JAVA_HOME/bin:$JRE_HOME/bin/$JAVA_HOME:$PATH
 source /etc/profile
+
+
+
+
+netstat -tunlp | grep 
