@@ -46,10 +46,10 @@ public class ThumbnailUtilsTest {
 	@Test
 	public void testScalingImageByGivenFactor() throws IOException {
 		String originalImageFilePath = ResourceUtils
-				.getPath("D:\\Users\\hasee\\git\\spring-xml\\src\\test\\resources\\original-1.jpg");
+				.getPath("D:\\Users\\Administrator\\Documents\\workspace-sts-3.9.5.RELEASE\\spring-xml\\src\\test\\resources\\original-3.jpg");
 		BufferedImage bufferedImage = ThumbnailUtils.scalingImageByGivenFactor(originalImageFilePath, 0.25);
 		String thumbnailFilePath = ResourceUtils
-				.getPath("D:\\Users\\hasee\\git\\spring-xml\\src\\test\\resources\\original-1-thumbnail.jpg");
+				.getPath("D:\\Users\\Administrator\\Documents\\workspace-sts-3.9.5.RELEASE\\spring-xml\\src\\test\\resources\\original-1-thumbnail.jpg");
 		log.info("originalImageFilePath:{}", originalImageFilePath);
 		ImageIO.write(bufferedImage, "jpg", new File(thumbnailFilePath));
 	}

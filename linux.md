@@ -132,3 +132,17 @@ str1 = str2(检查str1是否和str2相同)
 str1 != str2(检查str1是否和str2不同)
 -n str1(检查str1的长度是否非0)
 -z str1(检查str1的长度是否为0)
+
+
+ftp client install(yum search ftp)
+
+open Host Port(ftp Host Port)
+name : username
+password : password
+pwd
+ls 
+mget
+
+yum -y install ftp
+mysql client install(yum search mysql)
+yum -y install mysql(mariadb-libs.x86_64)
