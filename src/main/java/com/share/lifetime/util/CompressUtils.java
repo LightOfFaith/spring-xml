@@ -5,11 +5,13 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
+import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -37,27 +39,32 @@ public class CompressUtils {
 	public static void unTar(String targetPathname, String tarPathname) throws FileNotFoundException, IOException {
 		File targetDir = new File(targetPathname);
 		File tarFile = new File(tarPathname);
-		try (ArchiveInputStream i = new TarArchiveInputStream(new BufferedInputStream(new FileInputStream(tarFile)))) {
-			ArchiveEntry entry = null;
-			while ((entry = i.getNextEntry()) != null) {
-				if (!i.canReadEntryData(entry)) {
-					// log something?
-					continue;
+		try (ArchiveInputStream tarInput = new TarArchiveInputStream(
+				new BufferedInputStream(new FileInputStream(tarFile)))) {
+			uncompress(targetDir, tarInput);
+		}
+	}
+
+	private static void uncompress(File targetDir, ArchiveInputStream input) throws IOException {
+		ArchiveEntry entry = null;
+		while ((entry = input.getNextEntry()) != null) {
+			if (!input.canReadEntryData(entry)) {
+				// log something?
+				continue;
+			}
+			String name = fileName(targetDir, entry);
+			File f = new File(name);
+			if (entry.isDirectory()) {
+				if (!f.isDirectory() && !f.mkdirs()) {
+					throw new IOException("failed to create directory " + f);
 				}
-				String name = fileName(targetDir, entry);
-				File f = new File(name);
-				if (entry.isDirectory()) {
-					if (!f.isDirectory() && !f.mkdirs()) {
-						throw new IOException("failed to create directory " + f);
-					}
-				} else {
-					File parent = f.getParentFile();
-					if (!parent.isDirectory() && !parent.mkdirs()) {
-						throw new IOException("failed to create directory " + parent);
-					}
-					try (OutputStream o = Files.newOutputStream(f.toPath())) {
-						IOUtils.copy(i, o);
-					}
+			} else {
+				File parent = f.getParentFile();
+				if (!parent.isDirectory() && !parent.mkdirs()) {
+					throw new IOException("failed to create directory " + parent);
+				}
+				try (OutputStream output = Files.newOutputStream(f.toPath())) {
+					IOUtils.copy(input, output);
 				}
 			}
 		}
@@ -68,27 +75,37 @@ public class CompressUtils {
 		return file.getPath();
 	}
 
-	public static void zip(String zipName, String zipPathname) throws IOException {
-		File zip = new File(zipName);
+	public static void zip(String zipPathname, String targetPathname) throws IOException {
 		File zipFile = new File(zipPathname);
-		ZipArchiveOutputStream zipOutput = new ZipArchiveOutputStream(zip);
-		File[] ziplistFiles = zipFile.listFiles();
-		ZipArchiveInputStream zipInput = null;
-		ZipArchiveEntry entry = null;
-		String entryName = null;
-		byte[] contentOfEntry = new byte[1024];
-		int length = 0;
-		for (File inputFile : ziplistFiles) {
-			zipInput = new ZipArchiveInputStream(new FileInputStream(inputFile));
-			entryName = inputFile.getName();
-			entry = new ZipArchiveEntry(inputFile, entryName);
-			
-			zipOutput.putArchiveEntry(entry);
-			while ((length = zipInput.read(contentOfEntry)) != -1) {
-				zipOutput.write(contentOfEntry);
+		File targetDir = new File(targetPathname);
+		try (ArchiveOutputStream zipOutput = new ZipArchiveOutputStream(zipFile)) {
+			if (targetDir.exists()) {
+				File[] ziplistFiles = targetDir.listFiles();
+				ZipArchiveEntry entry = null;
+				String entryName = null;
+				for (File inputFile : ziplistFiles) {
+					try (InputStream zipInput = Files.newInputStream(inputFile.toPath())) {
+						entryName = inputFile.getName();
+						entry = new ZipArchiveEntry(inputFile, entryName);
+						zipOutput.putArchiveEntry(entry);
+						IOUtils.copy(zipInput, zipOutput);
+						zipOutput.closeArchiveEntry();
+					}
+				}
+			} else {
+				throw new FileNotFoundException(targetDir.toString());
 			}
-			zipOutput.closeArchiveEntry();
 		}
+	}
+
+	public static void unZip(String targetPathname, String zipPathname) throws IOException {
+		File targetDir = new File(targetPathname);
+		File zipFile = new File(zipPathname);
+		try (ArchiveInputStream zipInput = new ZipArchiveInputStream(
+				new BufferedInputStream(new FileInputStream(zipFile)))) {
+			uncompress(targetDir, zipInput);
+		}
+
 	}
 
 }

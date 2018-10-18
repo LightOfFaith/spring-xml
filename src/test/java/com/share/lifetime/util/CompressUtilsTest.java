@@ -9,12 +9,17 @@ public class CompressUtilsTest {
 
 	@Test
 	public void testUnTar() throws FileNotFoundException, IOException {
-		CompressUtils.unTar("E:\\", "E:\\httpcomponents-client-4.5.6.tar");
+		CompressUtils.unTar("E:\\", "E:\\original.tar");
 	}
 
 	@Test
 	public void testZip() throws FileNotFoundException, IOException {
-		CompressUtils.zip("E:\\aa.zip", "E:\\aa");
+		CompressUtils.zip("E:\\original.zip", "E:\\original");
+	}
+
+	@Test
+	public void testUnZip() throws FileNotFoundException, IOException {
+		CompressUtils.unZip("E:\\", "E:\\original.zip");
 	}
 
 }
