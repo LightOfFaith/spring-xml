@@ -9,16 +9,15 @@ import com.alibaba.fastjson.JSONObject;
 
 
 public class JsonUtils {
-	
+
 	public static String toJson(final Object object) {
 		return ReflectionToStringBuilder.toString(object, ToStringStyle.JSON_STYLE);
 	}
-	
-	public static String toJsonExclude(final Object object,final Collection<String> excludeFieldNames) {
-		 String stringExclude = ReflectionToStringBuilder.toStringExclude(object, excludeFieldNames);
+
+	public static String toJsonExclude(final Object object, final Collection<String> excludeFieldNames) {
+		String stringExclude = ReflectionToStringBuilder.toStringExclude(object, excludeFieldNames);
 		return JSONObject.toJSONString(stringExclude);
 	}
-	
-	
+
 
 }

@@ -10,10 +10,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class NewUserForm {
+	@StringValueConstraint(regexp = "^[0]6$")
 	private String email;
 	@StringValueConstraint(regexp = "^[0]6$")
 	private String verifyEmail;
-	@StringValueConstraint(regexp = "^[0]6$")
 	private String password;
 	private String verifyPassword;
 

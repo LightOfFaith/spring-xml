@@ -13,9 +13,11 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.alibaba.fastjson.JSONObject;
 import com.share.lifetime.aop.annotation.Log;
 import com.share.lifetime.aop.annotation.LogParam;
 import com.share.lifetime.base.SessionAttributeKeys;
+import com.share.lifetime.util.JsonUtils;
 import com.share.lifetime.util.LogContext;
 import com.share.lifetime.util.LogType;
 import com.share.lifetime.util.MapUtils;
@@ -28,21 +30,22 @@ public class LogAspect {
 
 	private static final String UNKNOWN = "Unkown";
 
-	private static final String WEB_LOG_TEMPLATE = "WEB API:[%s] path:[%s] is called by User:[%s] with IP:[%s], result is %s.";
+	private static final String WEB_LOG_TEMPLATE = "WEB API:[%s] path:[%s] is called by User:[%s] with IP:[%s], result is %s.\nresult:[%s]";
 
-	private static final String REST_LOG_TEMPLATE = "REST API:[%s] path:[%s] is called by IP:[%s], result is %s.";
+	private static final String REST_LOG_TEMPLATE = "REST API:[%s] path:[%s] is called by IP:[%s], result is %s.\nresult:[%s]";
 
 	// @Around("@annotation(logAnno)")
 	public Object log(ProceedingJoinPoint joinPoint, Log logAnno) throws Throwable {
 		addLogParamsIfPossible(joinPoint);
-		String methodName = getMethodName(joinPoint, logAnno);
 		Boolean isSuccess = Boolean.FALSE;
+		String methodName = getMethodName(joinPoint, logAnno);
+		Object result = null;
 		try {
-			Object result = joinPoint.proceed();
+			result = joinPoint.proceed();
 			isSuccess = Boolean.TRUE;
 			return result;
 		} finally {
-			log(isSuccess, logAnno.logType(), methodName);
+			log(isSuccess, logAnno.logType(), methodName, JSONObject.toJSONString(result));
 			LogContext.reset();
 		}
 	}
@@ -81,29 +84,29 @@ public class LogAspect {
 
 	}
 
-	private void log(Boolean isSuccess, LogType logType, String methodName) {
+	private void log(Boolean isSuccess, LogType logType, String methodName, String result) {
 		String content = null;
 		switch (logType) {
 			case REST:
-				content = getRESTRequstContent(methodName, isSuccess);
+				content = getRESTRequstContent(methodName, isSuccess, result);
 				break;
 			case WEB:
 			default:
-				content = getWebRequestContent(methodName, isSuccess);
+				content = getWebRequestContent(methodName, isSuccess, result);
 		}
 		log.info(content);
 	}
 
-	protected String getWebRequestContent(String name, Boolean isSuccess) {
+	protected String getWebRequestContent(String name, Boolean isSuccess, String result) {
 		String apiName = StringUtils.isNotBlank(name) ? name : "";
 		return buildLogContent(String.format(WEB_LOG_TEMPLATE, apiName, getURL(), getUserName(), getIpAddress(),
-				getResultValue(isSuccess)));
+				getResultValue(isSuccess), result));
 	}
 
-	protected String getRESTRequstContent(String name, Boolean isSuccess) {
+	protected String getRESTRequstContent(String name, Boolean isSuccess, String result) {
 		String apiName = StringUtils.isNotBlank(name) ? name : "";
 		return buildLogContent(
-				String.format(REST_LOG_TEMPLATE, apiName, getURL(), getIpAddress(), getResultValue(isSuccess)));
+				String.format(REST_LOG_TEMPLATE, apiName, getURL(), getIpAddress(), getResultValue(isSuccess), result));
 	}
 
 	private String buildLogContent(String initValue) {
