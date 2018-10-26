@@ -60,6 +60,9 @@
 		<redisson.version>3.7.0</redisson.version>
 		<elastic-job.version>2.1.5</elastic-job.version>
 		<kettle.version>7.1.0.0-12</kettle.version>
+		<thumbnailator.version>0.4.8</thumbnailator.version>
+		<jsch.version>0.1.54</jsch.version>
+
 
 		<dao.target.dir>src/main/java</dao.target.dir>
 		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
@@ -539,8 +542,15 @@
 		<dependency>
 			<groupId>net.coobird</groupId>
 			<artifactId>thumbnailator</artifactId>
-			<version>0.4.8</version>
+			<version>${thumbnailator.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+			<version>${jsch.version}</version>
+		</dependency>
+
 
 
 	</dependencies>
