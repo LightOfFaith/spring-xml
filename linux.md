@@ -146,3 +146,4 @@ mget
 yum -y install ftp
 mysql client install(yum search mysql)
 yum -y install mysql(mariadb-libs.x86_64)
+
