@@ -40,4 +40,18 @@ result ...] [ELSE result] END
 CASE WHEN [condition] THEN result [WHEN [condition] THEN result ...] [ELSE
 result] END
 
+SET GLOBAL sql_log_bin = ON;
+SET SQL_LOG_BIN=OFF;
+SOURCE datadir/meta/backup_gtid_executed.sql
+SET SQL_LOG_BIN=ON;
+
+SHOW BINARY LOGS;
+SHOW MASTER LOGS;
+
+SHOW VARIABLES;
+
+[mysqld]
+log-bin=mysql-bin
+server-id=1
+
 

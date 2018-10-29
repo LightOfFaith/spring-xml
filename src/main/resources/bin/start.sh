@@ -25,7 +25,7 @@ function start(){
 		echo -e "\e[00;32m$SPRING_BOOT_PROJECT_NAME is running with pid: $SPRING_BOOT_PROJECT_NAME_PID\e[00m"
 	else
 		echo -e "\e[00;32mStarting $SPRING_BOOT_PROJECT_NAME\e[00m"
-		nohup java -jar $SPRING_BOOT_PROJECT_NAME & > /dev/null 2>&1
+		nohup java -Xms512m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -jar -Dspring.profiles.active=prod $SPRING_BOOT_PROJECT_NAME & > /dev/null 2>&1
 	fi
 	return 0
 }
@@ -42,6 +42,8 @@ function status(){
 function stop(){
 	if [[ -n $SPRING_BOOT_PROJECT_NAME_PID ]]; then
 		echo -e "\e[00;31mStoping $SPRING_BOOT_PROJECT_NAME\e[00m"
+		curl -X POST http://localhost:[port]/manage/shutdown
+		sleep 2
 		kill -9 $SPRING_BOOT_PROJECT_NAME_PID
 	else
 		echo -e "\e[00;31m$SPRING_BOOT_PROJECT_NAME is not running\e[00m"

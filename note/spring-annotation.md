@@ -6,7 +6,7 @@ The @PropertySource annotation provides a convenient and declarative mechanism f
 
 
 
-java -jar -Dspring.profiles.active=production app-1.0.0.jar
+java -Xms512m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m -jar -Dspring.profiles.active=production app-1.0.0.jar
 @Configuration
 @PropertySources(value = { @PropertySource(value = "classpath:config/db/mysql-common.properties", encoding = "UTF-8"),
 		@PropertySource(value = "classpath:config/db/mysql-${spring.profiles.active}.properties", encoding = "UTF-8") })
