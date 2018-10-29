@@ -7,7 +7,6 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.alibaba.fastjson.JSONObject;
 
-
 public class JsonUtils {
 
 	public static String toJson(final Object object) {
@@ -19,5 +18,8 @@ public class JsonUtils {
 		return JSONObject.toJSONString(stringExclude);
 	}
 
+	public static String objectToJson(final Object object) {
+		return JSONObject.toJSONString(object);
+	}
 
 }

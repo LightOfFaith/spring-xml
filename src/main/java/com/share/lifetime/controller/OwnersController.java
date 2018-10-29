@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.share.lifetime.entity.Owner;
-
 @Controller
 @RequestMapping("owners")
 public class OwnersController {

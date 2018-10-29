@@ -60,8 +60,13 @@
 		<redisson.version>3.7.0</redisson.version>
 		<elastic-job.version>2.1.5</elastic-job.version>
 		<kettle.version>7.1.0.0-12</kettle.version>
+		<jxl.version>2.6.12</jxl.version>
 		<thumbnailator.version>0.4.8</thumbnailator.version>
 		<jsch.version>0.1.54</jsch.version>
+		<dubbo.version>2.6.4</dubbo.version>
+		<netty-all.version>4.1.16.Final</netty-all.version>
+		<zookeeper.version>3.4.10</zookeeper.version>
+		<curator-framework.version>2.12.0</curator-framework.version>
 
 
 		<dao.target.dir>src/main/java</dao.target.dir>
@@ -535,7 +540,7 @@
 		<dependency>
 			<groupId>net.sourceforge.jexcelapi</groupId>
 			<artifactId>jxl</artifactId>
-			<version>2.6.12</version>
+			<version>${jxl.version}</version>
 		</dependency>
 		<!-- kettle end -->
 
@@ -551,6 +556,29 @@
 			<version>${jsch.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>dubbo</artifactId>
+			<version>${dubbo.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>${netty-all.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.zookeeper</groupId>
+			<artifactId>zookeeper</artifactId>
+			<version>${zookeeper.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.curator</groupId>
+			<artifactId>curator-framework</artifactId>
+			<version>${curator-framework.version}</version>
+		</dependency>
 
 
 	</dependencies>
