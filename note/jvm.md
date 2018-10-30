@@ -4,7 +4,12 @@ https://docs.oracle.com/javase/7/docs/technotes/guides/vm/index.html
 https://docs.oracle.com/javase/8/docs/index.html
 https://docs.oracle.com/javase/8/docs/technotes/tools/unix/java.html#BABCBGHF
 
+https://docs.oracle.com/javase/tutorial/index.html
+
 http://jvmmemory.com/
+
+-Dproperty=value
+设置系统属性值。属性变量是一个没有空格表示属性名的字符串。value变量是表示属性值的字符串。如果value是一个带空格的字符串，那么用引号括起来 (for example -Dfoo="foo bar").
 
 -Xloggc:filename
 设置应将重定向的GC事件信息重定向到的文件以进行日志记录。写入此文件的信息类似于-verbose:gc自每个记录事件之前的第一个GC事件以来经过的时间的输出。如果两者都使用相同的java命令，则该-Xloggc选项将覆盖。-verbose:gc
