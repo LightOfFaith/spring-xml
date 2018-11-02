@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -49,6 +50,17 @@ public class TestController {
 	public @ResponseBody String errorCode500(HttpServletRequest request) {
 		return 1 / 0 + "";
 	}
-	
+
+	@RequestMapping(value = "/testVersion/{version:[a-zA-Z]+\\.[a-zA-Z]+}")
+	public @ResponseBody String version(@PathVariable String version) {
+		log.info("version:{}", version);
+		return "version";
+	}
+
+	@RequestMapping(value = "/json")
+	public @ResponseBody String json() {
+		return "json";
+	}
+
 
 }

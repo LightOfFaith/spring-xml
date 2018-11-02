@@ -21,7 +21,8 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorWatch
 
 	/**
 	 * 
-	 * @param connectString
+	 * @param connectString 127.0.0.1:3000,127.0.0.1:3001,127.0.0.1:3002
+	 * @see org.apache.zookeeper.ZooKeeper
 	 */
 	public CuratorZookeeperClient(String connectString) {
 		this(connectString, null, null);
@@ -32,8 +33,8 @@ public class CuratorZookeeperClient extends AbstractZookeeperClient<CuratorWatch
 	 * @param connectString
 	 * @param username      scheme
 	 * @param password      auth
-	 * 
-	 *                      username:password = scheme:auth
+	 * @see org.apache.zookeeper.ZooKeeper.addAuthInfo(String scheme, byte auth[])
+	 *          
 	 */
 	public CuratorZookeeperClient(String connectString, String username, String password) {
 		super(connectString, username, password);
