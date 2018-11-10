@@ -1,0 +1,35 @@
+http://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html
+
+<project>
+  ...
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.1</version>
+        <configuration>
+          <charset>UTF-8</charset>
+		  <encoding>UTF-8</encoding>
+   		  <docencoding>UTF-8</docencoding>
+		  ...
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>javadoc</goal>
+              <goal>test-javadoc</goal>
+            </goals>
+            <phase>site</phase>
+            <configuration>
+              <!-- Specific configuration for the given reports -->
+              ...
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+    ...
+  </build>
+  ...
+</project>
