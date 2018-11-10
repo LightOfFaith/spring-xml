@@ -49,7 +49,7 @@ public class AbstractRestController extends AbstractController {
         apiResult.setCode(SUCCESS_CODE);
         apiResult.setMsg(SUCCESS);
         apiResult.setSubCode(SUCCESS_CODE);
-        apiResult.setSubMsg(SUCCESS);
+        apiResult.setSubMsg(msg);
         apiResult.setResult(result);
         apiResult.setTimestamp(String.valueOf(System.currentTimeMillis()));
         return apiResult;
@@ -58,8 +58,8 @@ public class AbstractRestController extends AbstractController {
     @Override
     protected <T> RestApiResult<T> failure(String msg) {
         RestApiResult<T> apiResult = new RestApiResult<>();
-        apiResult.setCode(FAILURE_CODE);
-        apiResult.setMsg(FAILURE);
+        apiResult.setCode(SUCCESS_CODE);
+        apiResult.setMsg(SUCCESS);
         apiResult.setSubCode(FAILURE_CODE);
         apiResult.setSubMsg(msg);
         apiResult.setTimestamp(String.valueOf(System.currentTimeMillis()));
@@ -80,10 +80,10 @@ public class AbstractRestController extends AbstractController {
         return apiResult;
     }
 
-    protected <T> RestApiResult<T> failure(ErrorCode errorCode, String subCode, String subMsg) {
+    protected <T> RestApiResult<T> failure(String subCode, String subMsg) {
         RestApiResult<T> apiResult = new RestApiResult<>();
-        apiResult.setCode(errorCode.getCode());
-        apiResult.setMsg(errorCode.getMsg());
+        apiResult.setCode(FAILURE_CODE);
+        apiResult.setMsg(FAILURE);
         apiResult.setSubCode(subCode);
         apiResult.setSubMsg(subMsg);
         apiResult.setTimestamp(String.valueOf(System.currentTimeMillis()));

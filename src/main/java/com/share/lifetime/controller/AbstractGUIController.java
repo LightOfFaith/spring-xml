@@ -55,7 +55,7 @@ public class AbstractGUIController extends AbstractController {
     protected <T> AjaxResult<T> success(String msg, T result) {
         AjaxResult<T> ajaxResult = new AjaxResult<T>();
         ajaxResult.setCode(SUCCESS_CODE);
-        ajaxResult.setMsg(SUCCESS);
+        ajaxResult.setMsg(msg);
         ajaxResult.setResult(result);
         ajaxResult.setTimestamp(String.valueOf(System.currentTimeMillis()));
         return ajaxResult;
@@ -65,7 +65,7 @@ public class AbstractGUIController extends AbstractController {
     protected <T> AjaxResult<T> failure(String msg) {
         AjaxResult<T> ajaxResult = new AjaxResult<T>();
         ajaxResult.setCode(FAILURE_CODE);
-        ajaxResult.setMsg(FAILURE);
+        ajaxResult.setMsg(msg);
         ajaxResult.setTimestamp(String.valueOf(System.currentTimeMillis()));
         return ajaxResult;
     }
