@@ -31,10 +31,10 @@ http://jvmmemory.com/
 -XX:MetaspaceSize=size
 设置分配的类元数据空间的大小，该空间将在第一次超出时触发垃圾回收。根据使用的元数据量，增加或减少垃圾收集的阈值。默认大小取决于平台。
 
--XX：MaxPermSize = size
+-XX:MaxPermSize = size
 设置最大永久生成空间大小（以字节为单位）。此选项在JDK 8中已弃用，并由该-XX:MaxMetaspaceSize选项取代。
 
--XX：PermSize = size
+-XX:PermSize = size
 设置分配给永久生成的空间（以字节为单位），如果超出则会触发垃圾回收。此选项在JDK 8中已弃用，并被该-XX:MetaspaceSize选项取代。
 
 -XX:+PrintGC
