@@ -1,0 +1,1 @@
+https://docs.spring.io/spring-security/site/docs/4.2.8.RELEASE/reference/htmlsingle/

@@ -1,0 +1,22 @@
+maven-surefire-plugin
+
+<project>
+  [...]
+  <properties>
+    <skipTests>true</skipTests>
+  </properties>
+  [...]
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.0.0-M1</version>
+        <configuration>
+          <skipTests>${skipTests}</skipTests>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  [...]
+</project>

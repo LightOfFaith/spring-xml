@@ -1,0 +1,1 @@
+https://docs.spring.io/spring-amqp/docs/2.0.9.RELEASE/reference/html/
