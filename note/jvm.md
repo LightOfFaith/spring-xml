@@ -8,6 +8,11 @@ https://docs.oracle.com/javase/tutorial/index.html
 
 http://jvmmemory.com/
 
+JDK 8
+-Xms512m -Xmx1024m -XX:MetaspaceSize=128m -XX:MaxMetaspaceSize=256m
+JDK 7
+-Xms512m -Xmx1024m -XX:PermSize=128m -XX:MaxPermSize=256m
+
 -Dproperty=value
 设置系统属性值。属性变量是一个没有空格表示属性名的字符串。value变量是表示属性值的字符串。如果value是一个带空格的字符串，那么用引号括起来 (for example -Dfoo="foo bar").
 
