@@ -3,31 +3,31 @@ package com.share.lifetime.event;
 import org.springframework.context.ApplicationEvent;
 
 import com.share.lifetime.domain.Exception;
-import com.share.lifetime.domain.Message;
+import com.share.lifetime.domain.AbstractMessage;
 import com.share.lifetime.service.MessageService;
 
 public class ExceptionEvent extends ApplicationEvent {
 
 	private static final long serialVersionUID = -1391142300928206477L;
 
-	private Message message;
+	private AbstractMessage message;
 
 	private Exception exception;
 
 	private MessageService messageService;
 
-	public ExceptionEvent(Object source, Message message, Exception exception, MessageService messageService) {
+	public ExceptionEvent(Object source, AbstractMessage message, Exception exception, MessageService messageService) {
 		super(source);
 		this.message = message;
 		this.exception = exception;
 		this.messageService = messageService;
 	}
 
-	public Message getMessage() {
+	public AbstractMessage getMessage() {
 		return message;
 	}
 
-	public void setMessage(Message message) {
+	public void setMessage(AbstractMessage message) {
 		this.message = message;
 	}
 

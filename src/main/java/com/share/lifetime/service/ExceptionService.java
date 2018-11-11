@@ -1,10 +1,10 @@
 package com.share.lifetime.service;
 
-import com.share.lifetime.domain.Message;
+import com.share.lifetime.domain.AbstractMessage;
 
 public interface ExceptionService {
 
-	void handlerException(Message message, com.share.lifetime.domain.Exception exception,
+	void handlerException(AbstractMessage message, com.share.lifetime.domain.Exception exception,
 			MessageService messageService);
 
 }

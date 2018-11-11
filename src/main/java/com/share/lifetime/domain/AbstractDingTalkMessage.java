@@ -6,11 +6,12 @@ import lombok.Setter;
 /**
  * 
  * @author liaoxiang
- *
+ * @date 2018/11/11
  */
 @Getter
 @Setter
-public abstract class Message {
-	
-	 public abstract String toJsonString();
+public abstract class AbstractDingTalkMessage extends AbstractMessage {
+
+    private String webhook;
+
 }

@@ -39,10 +39,14 @@ public class StringUtils {
 		}
 		char[] chars = obj.toString().toCharArray();
 		int length = chars.length;
-		if (length < 1) return false;
+		if (length < 1) {
+			return false;
+		}
 
 		int i = 0;
-		if (length > 1 && chars[0] == '-') i = 1;
+		if (length > 1 && chars[0] == '-') {
+			i = 1;
+		}
 
 		for (; i < length; i++) {
 			if (!Character.isDigit(chars[i])) {
@@ -84,14 +88,18 @@ public class StringUtils {
 	 * 过滤不可见字符
 	 */
 	public static String stripNonValidXMLCharacters(String input) {
-		if (input == null || ("".equals(input))) return "";
+		if (input == null || ("".equals(input))) {
+			return "";
+		}
 		StringBuilder out = new StringBuilder();
 		char current;
 		for (int i = 0; i < input.length(); i++) {
 			current = input.charAt(i);
 			if ((current == 0x9) || (current == 0xA) || (current == 0xD) || ((current >= 0x20) && (current <= 0xD7FF))
-					|| ((current >= 0xE000) && (current <= 0xFFFD)) || ((current >= 0x10000) && (current <= 0x10FFFF)))
+					|| ((current >= 0xE000) && (current <= 0xFFFD))
+					|| ((current >= 0x10000) && (current <= 0x10FFFF))) {
 				out.append(current);
+			}
 		}
 		return out.toString();
 	}

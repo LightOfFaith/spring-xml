@@ -9,7 +9,7 @@ import com.dingtalk.chatbot.SendResult;
 import com.dingtalk.chatbot.message.MarkdownMessage;
 import com.share.lifetime.constant.DingTalkConsts;
 import com.share.lifetime.domain.DingTalkMarkdownMessage;
-import com.share.lifetime.domain.Message;
+import com.share.lifetime.domain.AbstractMessage;
 import com.share.lifetime.service.DingTalkMessageService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -19,12 +19,12 @@ import lombok.extern.slf4j.Slf4j;
 public class DingTalkMessageServiceImpl implements DingTalkMessageService {
 
 	@Override
-	public void sendMessage(Message message) throws Exception {
+	public void sendMessage(AbstractMessage message) throws Exception {
 		sendMessage(DingTalkConsts.CHATBOT_WEBHOOK, message);
 	}
 
 	@Override
-	public void sendMessage(String webhook, Message message) throws Exception {
+	public void sendMessage(String webhook, AbstractMessage message) throws Exception {
 		if (message instanceof DingTalkMarkdownMessage) {
 			DingTalkMarkdownMessage dingTalkMarkdownMessage = (DingTalkMarkdownMessage) message;
 			MarkdownMessage markdownMessage = new MarkdownMessage();

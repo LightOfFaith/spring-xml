@@ -10,7 +10,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class MailMessage extends Message {
+public class MailMessage extends AbstractMessage {
 
 	private String subject;
 

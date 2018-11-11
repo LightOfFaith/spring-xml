@@ -1,9 +1,9 @@
 package com.share.lifetime.service;
 
-import com.share.lifetime.domain.Message;
+import com.share.lifetime.domain.AbstractMessage;
 
 public interface MessageService {
 
-	void sendMessage(Message message) throws Exception;
+	void sendMessage(AbstractMessage message) throws Exception;
 
 }

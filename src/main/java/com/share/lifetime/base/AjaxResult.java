@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class AjaxResult<T> extends Result<T> {
+public class AjaxResult<T> extends AbstractResult<T> {
 
 	private static final long serialVersionUID = 3725397743632963070L;
 

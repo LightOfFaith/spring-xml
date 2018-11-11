@@ -1,14 +1,12 @@
 package com.share.lifetime.util;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.imageio.stream.ImageOutputStream;
 
 import org.junit.Test;
 

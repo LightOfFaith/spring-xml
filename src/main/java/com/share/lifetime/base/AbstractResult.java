@@ -9,20 +9,25 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 
+ * @author liaoxiang
+ * @date 2018/11/11
+ */
 @Getter
 @Setter
 @ToString
 @JsonInclude(Include.NON_EMPTY)
-public abstract class Result<T> implements Serializable {
+public abstract class AbstractResult<T> implements Serializable {
 
-	private static final long serialVersionUID = -894571388029744301L;
+    private static final long serialVersionUID = -894571388029744301L;
 
-	protected String code;
+    protected String code;
 
-	protected String msg;
+    protected String msg;
 
-	protected T result;
-	
-	protected String timestamp;
+    protected T result;
+
+    protected String timestamp;
 
 }

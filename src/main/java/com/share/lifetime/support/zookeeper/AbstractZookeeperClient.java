@@ -38,6 +38,7 @@ public abstract class AbstractZookeeperClient<TargetChildListener> implements Zo
 		return connectString;
 	}
 
+	@Override
 	public String getUsername() {
 		return username;
 	}

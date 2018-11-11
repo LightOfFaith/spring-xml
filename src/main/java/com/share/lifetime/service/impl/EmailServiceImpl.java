@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 import com.share.lifetime.domain.MailMessage;
-import com.share.lifetime.domain.Message;
+import com.share.lifetime.domain.AbstractMessage;
 import com.share.lifetime.service.EmailService;
 
 @Service("emailService")
@@ -19,10 +19,11 @@ public class EmailServiceImpl implements EmailService {
 	private JavaMailSender mailSender;
 
 	@Override
-	public void sendMessage(Message message) {
+	public void sendMessage(AbstractMessage message) {
 		if (message instanceof MailMessage) {
 			MailMessage mailMessage = (MailMessage) message;
 			MimeMessagePreparator preparator = new MimeMessagePreparator() {
+				@Override
 				public void prepare(MimeMessage mimeMessage) throws Exception {
 					MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
 					message.setSubject(mailMessage.getSubject());

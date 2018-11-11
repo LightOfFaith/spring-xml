@@ -1,6 +1,6 @@
 package com.share.lifetime.domain;
 
-public class PageQuery extends Query {
+public class PageQuery extends AbstractQuery {
 
 	private static final long serialVersionUID = 1L;
 

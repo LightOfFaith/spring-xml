@@ -1,6 +1,6 @@
 package com.share.lifetime.domain;
 
-public abstract class Query extends DTO {
+public abstract class AbstractQuery extends DTO {
 
 	private static final long serialVersionUID = 1L;
 

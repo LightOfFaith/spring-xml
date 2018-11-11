@@ -1,10 +1,10 @@
 package com.share.lifetime.service;
 
 import com.share.lifetime.domain.DTO;
-import com.share.lifetime.domain.Query;
+import com.share.lifetime.domain.AbstractQuery;
 import com.share.lifetime.exception.ServiceException;
 
-public interface RepositoryService<T extends DTO, ID, Q extends Query> extends Service {
+public interface RepositoryService<T extends DTO, ID, Q extends AbstractQuery> extends Service {
 
 	<S extends T> S save(S entity) throws ServiceException;
 
@@ -18,11 +18,11 @@ public interface RepositoryService<T extends DTO, ID, Q extends Query> extends S
 
 	Iterable<T> findAllById(Iterable<ID> ids) throws ServiceException;
 
-	Iterable<T> findAllByQuery(Query query) throws ServiceException;
+	Iterable<T> findAllByQuery(AbstractQuery query) throws ServiceException;
 
 	long count() throws ServiceException;
 
-	long countByQuery(Query query) throws ServiceException;
+	long countByQuery(AbstractQuery query) throws ServiceException;
 
 	void deleteById(ID id) throws ServiceException;
 

@@ -2,7 +2,6 @@ package com.share.lifetime.service.impl;
 
 import static org.junit.Assert.fail;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 

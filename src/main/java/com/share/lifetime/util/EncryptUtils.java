@@ -12,7 +12,9 @@ public class EncryptUtils {
 			'F'};
 
 	public static String encryptMD5ToString(final String data) {
-		if (data == null || data.length() == 0) return "";
+		if (data == null || data.length() == 0) {
+			return "";
+		}
 		return encryptMD5ToString(data.getBytes());
 	}
 
@@ -36,9 +38,15 @@ public class EncryptUtils {
 	}
 
 	public static String encryptMD5ToString(final byte[] data, final byte[] salt) {
-		if (data == null && salt == null) return "";
-		if (salt == null) return bytes2HexString(encryptMD5(data));
-		if (data == null) return bytes2HexString(encryptMD5(salt));
+		if (data == null && salt == null) {
+			return "";
+		}
+		if (salt == null) {
+			return bytes2HexString(encryptMD5(data));
+		}
+		if (data == null) {
+			return bytes2HexString(encryptMD5(salt));
+		}
 		byte[] dataSalt = new byte[data.length + salt.length];
 		System.arraycopy(data, 0, dataSalt, 0, data.length);
 		System.arraycopy(salt, 0, dataSalt, data.length, salt.length);
@@ -54,7 +62,7 @@ public class EncryptUtils {
 	}
 
 	private static byte[] hashTemplate(final byte[] data, final String algorithm) {
-		if (data == null || data.length <= 0) return null;
+		if (data == null || data.length <= 0) {return null;}
 		try {
 			MessageDigest md = MessageDigest.getInstance(algorithm);
 			md.update(data);
@@ -66,9 +74,9 @@ public class EncryptUtils {
 	}
 
 	private static String bytes2HexString(final byte[] bytes) {
-		if (bytes == null) return "";
+		if (bytes == null) { return "";}
 		int len = bytes.length;
-		if (len <= 0) return "";
+		if (len <= 0) {return "";}
 		char[] ret = new char[len << 1];
 		for (int i = 0, j = 0; i < len; i++) {
 			ret[j++] = HEX_DIGITS[bytes[i] >> 4 & 0x0f];

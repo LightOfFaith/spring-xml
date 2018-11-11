@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 
 import com.share.lifetime.domain.Exception;
-import com.share.lifetime.domain.Message;
+import com.share.lifetime.domain.AbstractMessage;
 import com.share.lifetime.event.ExceptionEvent;
 import com.share.lifetime.service.ExceptionService;
 import com.share.lifetime.service.MessageService;
@@ -24,7 +24,7 @@ public class ExceptionServiceImpl implements ExceptionService, ApplicationEventP
 	}
 
 	@Override
-	public void handlerException(Message message, Exception exception, MessageService messageService) {
+	public void handlerException(AbstractMessage message, Exception exception, MessageService messageService) {
 		log.info("异常服务发布信息！！Message:{},Exception:{}", message, exception);
 		ExceptionEvent event = new ExceptionEvent(this, message, exception, messageService);
 		applicationEventPublisher.publishEvent(event);

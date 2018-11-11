@@ -24,6 +24,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 	@Autowired
 	private VelocityEngine velocityEngine;
 
+	@Override
 	public void register(User user) throws Exception {
 		sendConfirmationEmail(user);
 	}
