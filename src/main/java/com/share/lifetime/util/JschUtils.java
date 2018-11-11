@@ -24,10 +24,30 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class JschUtils {
 
-    private static Session getSession(String host, int port, String username, String password) throws JSchException {
+    public static final String SESSION_TYPE = "session";
+    public static final String SHELL_TYPE = "shell";
+    public static final String EXEC_TYPE = "exec";
+    public static final String SFTP_TYPE = "sftp";
+
+    public static final int PORT = 22;
+
+    public static final int TIMEOUT = 5000;
+
+    public static Session getSession(String host, String username, String password) throws JSchException {
+        return getSession(host, PORT, username, password, TIMEOUT);
+    }
+
+    public static Session getSession(String host, int port, String username, String password) throws JSchException {
+        return getSession(host, port, username, password, TIMEOUT);
+    }
+
+    public static Session getSession(String host, int port, String username, String password, int timeout)
+        throws JSchException {
         JSch jsch = new JSch();
         Session session = jsch.getSession(username, host, port);
         session.setPassword(password);
+        session.setConfig("StrictHostKeyChecking", "no");
+        session.setTimeout(timeout);
         return session;
     }
 
@@ -40,7 +60,7 @@ public class JschUtils {
      * @return
      * @throws JSchException
      */
-    private static Session getSessionByUserAuthPubKey(String host, int port, String username, String identity)
+    public static Session getSessionByUserAuthPubKey(String host, int port, String username, String identity)
         throws JSchException {
         JSch jsch = new JSch();
         jsch.addIdentity(identity, "passphrase");
@@ -48,14 +68,9 @@ public class JschUtils {
         return session;
     }
 
-    public static String exec(String host, String username, String password, String command)
+    public static void shell(String host, int port, String username, String password, int timeout)
         throws JSchException, IOException {
-        return exec(host, 22, username, password, command);
-    }
-
-    public static void shell(String host, int port, String username, String password)
-        throws JSchException, IOException {
-        Session session = getSession(host, port, username, password);
+        Session session = getSession(host, port, username, password, timeout);
         UserInfo userInfo = new UserInfo() {
 
             @Override
@@ -99,7 +114,7 @@ public class JschUtils {
         // session.setConfig("StrictHostKeyChecking", "no");
         // session.connect();
         session.connect(3 * 10000);
-        ChannelShell shell = (ChannelShell)session.openChannel("shell");
+        ChannelShell shell = (ChannelShell)session.openChannel(SHELL_TYPE);
         shell.setInputStream(System.in);
         shell.setOutputStream(System.out);
         // shell.setPtyType("vt102");
@@ -107,12 +122,17 @@ public class JschUtils {
         shell.connect(3 * 1000);
     }
 
-    public static String exec(String host, int port, String username, String password, String command)
+    public static String exec(String host, String username, String password, String command)
         throws JSchException, IOException {
-        Session session = getSession(host, port, username, password);
+        return exec(host, PORT, username, password, TIMEOUT, command);
+    }
+
+    public static String exec(String host, int port, String username, String password, int timeout, String command)
+        throws JSchException, IOException {
+        Session session = getSession(host, port, username, password, timeout);
         session.setConfig("StrictHostKeyChecking", "no");
         session.connect();
-        ChannelExec exec = (ChannelExec)session.openChannel("exec");
+        ChannelExec exec = (ChannelExec)session.openChannel(EXEC_TYPE);
         exec.setCommand(command);
         // exec.setInputStream(System.in);
         exec.setInputStream(null);
