@@ -487,7 +487,6 @@
 			<version>${redisson.version}</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.mybatis.caches</groupId>
 			<artifactId>mybatis-redis</artifactId>
