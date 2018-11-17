@@ -28,3 +28,6 @@ endpoints.info.path: /info
 endpoints.info.sensitive: false
 
 
+mybatis-generator:generate
+
+

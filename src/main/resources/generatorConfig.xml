@@ -6,10 +6,9 @@
 <!-- http://www.mybatis.org/generator/configreference/xmlconfig.html、http://mbg.cndocs.ml/configreference/xmlconfig.html -->
 <generatorConfiguration>
 	<classPathEntry
-		location="D:/ProgramFiles/maven_repository/mysql/mysql-connector-java/6.0.6/mysql-connector-java-6.0.6.jar" />
+		location="D:\Users\Administrator\Documents\workspace-sts-3.9.5.RELEASE\spring-xml\src\main\webapp\WEB-INF\lib\mysql-connector-java-6.0.6.jar" />
 
-	<context id="MySQLTables" defaultModelType="flat"
-		targetRuntime="MyBatis3">
+	<context id="MySQLTables">
 		<!-- defaultModelType：conditional、flat、hierarchical -->
 		<!-- targetRuntime：MyBatis3、MyBatis3Simple、MyBatis3DynamicSql、 -->
 
@@ -42,8 +41,8 @@
 		</commentGenerator>
 
 		<jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-			connectionURL="jdbc:mysql://192.168.43.145:3306/admin" userId="root"
-			password="root">
+			connectionURL="jdbc:mysql://localhost:3306/security?serverTimezone=UTC"
+			userId="root" password="root">
 		</jdbcConnection>
 
 		<javaTypeResolver>
@@ -52,25 +51,37 @@
 
 		<javaModelGenerator
 			targetPackage="com.share.lifetime.entity"
-			targetProject="D:/Users/hasee/git/spring-xml/target">
+			targetProject="D:\Users\Administrator\Documents">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<sqlMapGenerator
 			targetPackage="com.share.lifetime.mapper"
-			targetProject="D:/Users/hasee/git/spring-xml/target">
+			targetProject="D:\Users\Administrator\Documents">
 			<!-- <property name="enableSubPackages" value="true" /> -->
 		</sqlMapGenerator>
 
 		<javaClientGenerator type="XMLMAPPER"
 			targetPackage="com.share.lifetime.dao"
-			targetProject="D:/Users/hasee/git/spring-xml/target">
+			targetProject="D:\Users\Administrator\Documents">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
-		<table schema="admin" tableName="user" domainObjectName="User">
-			<property name="useActualColumnNames" value="true" />
+		<table schema="" tableName="users" domainObjectName=""
+			enableCountByExample="false" enableDeleteByExample="false"
+			enableSelectByExample="false" enableUpdateByExample="false">
+			<property name="useActualColumnNames" value="false" />
+			<generatedKey column="id" sqlStatement="MySql"
+				identity="true" />
+			<!-- <columnOverride column="DATE_FIELD" property="startDate" /> <ignoreColumn 
+				column="FRED" /> <columnOverride column="LONG_VARCHAR_FIELD" jdbcType="VARCHAR" 
+				/> -->
+		</table>
+		<table schema="" tableName="authorities" domainObjectName=""
+			enableCountByExample="false" enableDeleteByExample="false"
+			enableSelectByExample="false" enableUpdateByExample="false">
+			<property name="useActualColumnNames" value="false" />
 			<generatedKey column="id" sqlStatement="MySql"
 				identity="true" />
 			<!-- <columnOverride column="DATE_FIELD" property="startDate" /> <ignoreColumn 

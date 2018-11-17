@@ -33,6 +33,21 @@ SHOW VARIABLES LIKE 'secure_file_priv';
 SHOW VARIABLES LIKE 'TIME_ZONE';
 SHOW GLOBAL VARIABLES LIKE '%TIME_ZONE%'
 
+ALTER TABLE tbl_name DROP FOREIGN KEY fk_symbol;
+
+ALTER TABLE tbl_name RENAME new_tbl_name;
+
+ALTER TABLE tbl_name DEFAULT CHARACTER SET charset_name;
+
+ALTER TABLE t2 DROP COLUMN c, DROP COLUMN d;
+
+ALTER TABLE authorities DROP FOREIGN KEY fk_authorities_users;
+
+ALTER TABLE authorities DROP INDEX ix_auth_username;
+
+ALTER TABLE authorities CONSTRAINT fk_authorities_users ADD FOREIGN KEY (username) REFERENCES users (username)
+
+CREATE UNIQUE INDEX ix_auth_username ON authorities (username,authority);
 
 CASE value WHEN [compare_value] THEN result [WHEN [compare_value] THEN
 result ...] [ELSE result] END
