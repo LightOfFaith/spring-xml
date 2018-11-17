@@ -6,9 +6,10 @@
 <!-- http://www.mybatis.org/generator/configreference/xmlconfig.html、http://mbg.cndocs.ml/configreference/xmlconfig.html -->
 <generatorConfiguration>
 	<classPathEntry
-		location="D:\Users\Administrator\Documents\workspace-sts-3.9.5.RELEASE\spring-xml\src\main\webapp\WEB-INF\lib\mysql-connector-java-6.0.6.jar" />
+		location="D:/ProgramFiles/maven_repository/mysql/mysql-connector-java/6.0.6/mysql-connector-java-6.0.6.jar" />
 
-	<context id="MySQLTables">
+	<context id="MySQLTables" defaultModelType="flat"
+		targetRuntime="MyBatis3">
 		<!-- defaultModelType：conditional、flat、hierarchical -->
 		<!-- targetRuntime：MyBatis3、MyBatis3Simple、MyBatis3DynamicSql、 -->
 
@@ -41,8 +42,8 @@
 		</commentGenerator>
 
 		<jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-			connectionURL="jdbc:mysql://localhost:3306/security?serverTimezone=UTC"
-			userId="root" password="root">
+			connectionURL="jdbc:mysql://192.168.43.145:3306/admin" userId="root"
+			password="root">
 		</jdbcConnection>
 
 		<javaTypeResolver>
@@ -51,20 +52,20 @@
 
 		<javaModelGenerator
 			targetPackage="com.share.lifetime.entity"
-			targetProject="D:\Users\Administrator\Documents">
+			targetProject="D:/Users/hasee/git/spring-xml/target">
 			<property name="enableSubPackages" value="true" />
 			<property name="trimStrings" value="true" />
 		</javaModelGenerator>
 
 		<sqlMapGenerator
 			targetPackage="com.share.lifetime.mapper"
-			targetProject="D:\Users\Administrator\Documents">
+			targetProject="D:/Users/hasee/git/spring-xml/target">
 			<!-- <property name="enableSubPackages" value="true" /> -->
 		</sqlMapGenerator>
 
 		<javaClientGenerator type="XMLMAPPER"
 			targetPackage="com.share.lifetime.dao"
-			targetProject="D:\Users\Administrator\Documents">
+			targetProject="D:/Users/hasee/git/spring-xml/target">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
 
