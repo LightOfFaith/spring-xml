@@ -44,6 +44,7 @@
 		<httpclient.version>4.5.3</httpclient.version>
 		<guava.version>25.1-jre</guava.version>
 		<validation-api.version>2.0.1.Final</validation-api.version>
+		<org.glassfish.javax.el.version>3.0.0</org.glassfish.javax.el.version>
 		<hibernate-validator.version>6.0.10.Final</hibernate-validator.version>
 		<springfox-swagger2.version>2.8.0</springfox-swagger2.version>
 		<springfox-swagger-ui.version>2.8.0</springfox-swagger-ui.version>
@@ -207,11 +208,10 @@
 		<!-- <dependency> <groupId>javax.el</groupId> <artifactId>javax.el-api</artifactId> 
 			<version>${javax.el-api.version}</version> </dependency> -->
 
-		<!-- https://mvnrepository.com/artifact/org.glassfish/javax.el -->
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.el</artifactId>
-			<version>3.0.0</version>
+			<version>${org.glassfish.javax.el.version}</version>
 		</dependency>
 
 		<dependency>
@@ -317,7 +317,6 @@
 			<version>${commons-beanutils.version}</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/commons-codec/commons-codec -->
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
