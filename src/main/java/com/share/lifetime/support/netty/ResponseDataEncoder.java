@@ -8,17 +8,23 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 /**
  * 响应编码器
+ * 
  * @author liaoxiang
  * @date 2018/11/11
  */
 public class ResponseDataEncoder extends MessageToByteEncoder<ResponseData> {
 
     private final Charset charset = Charset.forName("UTF-8");
-    
+
     @Override
     protected void encode(ChannelHandlerContext ctx, ResponseData msg, ByteBuf out) throws Exception {
-        out.writeInt(msg.getIntValue());
-        out.writeCharSequence(msg.getStringValue(), charset);
+        ByteBuf in = ctx.alloc().buffer(4);
+        String value = msg.getValue();
+        byte[] src = value.getBytes();
+        in.writeBytes(src);
+        int length = src.length;
+        out.writeInt(length);
+        out.writeCharSequence(msg.getValue(), charset);
     }
 
 }

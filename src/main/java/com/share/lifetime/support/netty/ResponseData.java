@@ -9,7 +9,6 @@ import lombok.ToString;
 @ToString
 public class ResponseData {
 
-    private int intValue;
-    private String stringValue;
+    private String value;
 
 }

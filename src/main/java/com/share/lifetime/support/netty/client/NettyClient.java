@@ -1,6 +1,10 @@
 package com.share.lifetime.support.netty.client;
 
+import org.apache.commons.lang3.StringUtils;
+
+import com.share.lifetime.support.netty.RequestData;
 import com.share.lifetime.support.netty.RequestDataEncoder;
+import com.share.lifetime.support.netty.ResponseData;
 import com.share.lifetime.support.netty.ResponseDataDecoder;
 
 import io.netty.bootstrap.Bootstrap;
@@ -11,25 +15,48 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class NettyClient {
 
-    public static void main(String[] args) throws Exception {
+    private String host;
 
-        String host = "localhost";
-        int port = 8080;
+    private int port;
+
+    private RequestData requestData;
+
+    public NettyClient(String host, int port, RequestData requestData) {
+        if (StringUtils.isBlank(host)) {
+            throw new RuntimeException("host Can not be null");
+        }
+        if (requestData == null) {
+            throw new RuntimeException("requestData Can not be null");
+        }
+        this.host = host;
+        this.port = port;
+        this.requestData = requestData;
+    }
+
+    public ResponseData sendRequest() throws InterruptedException {
         EventLoopGroup workerGroup = new NioEventLoopGroup();
+
+        ClientHandler clientHandler = new ClientHandler(requestData);
 
         try {
             Bootstrap b = new Bootstrap();
             b.group(workerGroup);
             b.channel(NioSocketChannel.class);
-            b.option(ChannelOption.SO_KEEPALIVE, true);
+            // 设置连接超时时间
+            b.option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000);
+            // 设置是否启动心跳保活机制（长连接）
+            b.option(ChannelOption.SO_KEEPALIVE, false);
             b.handler(new ChannelInitializer<SocketChannel>() {
-
                 @Override
                 public void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new RequestDataEncoder(), new ResponseDataDecoder(), new ClientHandler());
+                    ch.pipeline().addLast(new RequestDataEncoder(), new ResponseDataDecoder(), clientHandler);
                 }
             });
 
@@ -39,6 +66,7 @@ public class NettyClient {
         } finally {
             workerGroup.shutdownGracefully();
         }
+        return clientHandler.getResponseData();
     }
 
 }

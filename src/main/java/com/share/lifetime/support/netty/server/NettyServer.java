@@ -20,13 +20,6 @@ public class NettyServer {
         this.port = port;
     }
 
-    public static void main(String[] args) throws Exception {
-
-        int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
-
-        new NettyServer(port).run();
-    }
-
     public void run() throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
@@ -39,9 +32,7 @@ public class NettyServer {
                         ch.pipeline().addLast(new RequestDataDecoder(), new ResponseDataEncoder(),
                             new ProcessingHandler());
                     }
-                })
-                // .option(ChannelOption.SO_BACKLOG, 128)
-                .childOption(ChannelOption.SO_KEEPALIVE, true);
+                }).option(ChannelOption.SO_BACKLOG, 128).childOption(ChannelOption.SO_KEEPALIVE, false);
 
             ChannelFuture f = b.bind(port).sync();
             f.channel().closeFuture().sync();

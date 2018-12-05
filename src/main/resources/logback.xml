@@ -14,7 +14,7 @@
 	<property name="log.charset" value="UTF-8" />
 	<property name="log.maxHistory" value="30" />
 	<property name="log.pattern"
-		value="[%d{yyyy-MM-dd HH:mm:ss}] %-5level %class{36} %L %M - %msg%xEx%n" />
+		value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] [%thread] [%class{36}] %L %M - %msg%xEx%n" />
 	<!-- <property name="log.pattern" value="[%d{yyyy-MM-dd HH:mm:ss}] %-5level 
 		%class{36} %L %M - %msg%xEx%n" /> -->
 	<!-- <property name="log.pattern" value="[%d{yyyy-MM-dd HH:mm:ss.SSS}] [%level] 

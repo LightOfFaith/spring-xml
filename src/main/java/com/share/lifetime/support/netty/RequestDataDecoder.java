@@ -20,9 +20,8 @@ public class RequestDataDecoder extends ReplayingDecoder<RequestData> {
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
         RequestData data = new RequestData();
-        data.setIntValue(in.readInt());
         int strLen = in.readInt();
-        data.setStringValue(in.readCharSequence(strLen, charset).toString());
+        data.setValue(in.readCharSequence(strLen, charset).toString());
         out.add(data);
     }
 

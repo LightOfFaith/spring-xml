@@ -16,11 +16,10 @@ public class ProcessingHandler extends ChannelInboundHandlerAdapter {
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         RequestData requestData = (RequestData)msg;
         ResponseData responseData = new ResponseData();
-        responseData.setIntValue(requestData.getIntValue() * 2);
-        responseData.setStringValue(requestData.getStringValue());
+        responseData.setValue(requestData.getValue());
         ChannelFuture future = ctx.writeAndFlush(responseData);
         future.addListener(ChannelFutureListener.CLOSE);
-        log.info("{}", requestData);
+        log.info("netty服务端接收客户端请求参数:{}", requestData.getValue());
     }
 
 }
