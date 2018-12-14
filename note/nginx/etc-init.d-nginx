@@ -1,1 +1,6 @@
 https://www.nginx.com/resources/wiki/start/index.html
+
+
+ln -s /home/bsapp/nginx/sbin/nginx /usr/bin/nginx
+
+/usr/bin/nginx -s stop
