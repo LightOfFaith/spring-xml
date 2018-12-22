@@ -69,4 +69,16 @@ SHOW VARIABLES;
 log-bin=mysql-bin
 server-id=1
 
+-d
+
+
+ALTER TABLE tbl_name ADD COLUMN (col_name data_type [NOT NULL | NULL] [DEFAULT default_value]
+ [AUTO_INCREMENT] [UNIQUE [KEY]] [[PRIMARY] KEY]
+ [COMMENT 'string']
+ [COLUMN_FORMAT {FIXED|DYNAMIC|DEFAULT}],...);
+ 
+ 
+ALTER TABLE tbl_name MODIFY [COLUMN] col_name data_type [NOT NULL | NULL] [DEFAULT default_value]
+ [AUTO_INCREMENT] [UNIQUE [KEY]] [[PRIMARY] KEY]
+ [COMMENT 'string']
 
