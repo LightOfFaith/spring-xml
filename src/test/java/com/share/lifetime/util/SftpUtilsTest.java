@@ -5,6 +5,9 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SftpUtilsTest {
 
     String host = null;
@@ -33,5 +36,13 @@ public class SftpUtilsTest {
         String dst = "/home/sftp/test.txt";
         boolean upload = SftpUtils.upload(host, port, username, password, src, dst);
         assertTrue(upload);
+    }
+
+    @Test
+    public void testGetFileNumber() {
+        String path = "/home/sftp/";
+        int number = SftpUtils.getFileNumber(host, port, username, password, path, "test");
+        log.info("{}", number);
+        assertTrue(number > 0);
     }
 }

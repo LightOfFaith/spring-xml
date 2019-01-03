@@ -25,6 +25,7 @@ public class SftpUtils {
         ChannelSftp channelSftp = null;
         try {
             session = JschUtils.getSession(host, port, username, password);
+            session.connect();
             channel = session.openChannel(JschUtils.SFTP_TYPE);
             channel.connect();
             channelSftp = (ChannelSftp)channel;
@@ -51,6 +52,7 @@ public class SftpUtils {
         ChannelSftp channelSftp = null;
         try {
             session = JschUtils.getSession(host, port, username, password);
+            session.connect();
             channel = session.openChannel(JschUtils.SFTP_TYPE);
             channel.connect();
             channelSftp = (ChannelSftp)channel;
@@ -68,6 +70,49 @@ public class SftpUtils {
             }
         }
         return flag;
+    }
+
+    @SuppressWarnings("rawtypes")
+    public static int getFileNumber(String host, int port, String username, String password, String path,
+        String prefix) {
+        int number = 0;
+        Session session = null;
+        Channel channel = null;
+        ChannelSftp channelSftp = null;
+        try {
+            session = JschUtils.getSession(host, port, username, password);
+            session.connect();
+            channel = session.openChannel(JschUtils.SFTP_TYPE);
+            channel.connect();
+            channelSftp = (ChannelSftp)channel;
+            java.util.Vector vv = channelSftp.ls(path);
+            if (vv != null) {
+                String filename = "";
+                for (int i = 0; i < vv.size(); i++) {
+                    Object obj = vv.elementAt(i);
+                    if (obj instanceof com.jcraft.jsch.ChannelSftp.LsEntry) {
+                        filename = ((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getFilename();
+                        // String longname = ((com.jcraft.jsch.ChannelSftp.LsEntry)obj).getLongname();
+                        if (filename.startsWith(prefix)) {
+                            number++;
+                        }
+                    }
+                }
+            }
+            log.info("ls:{}", vv);
+        } catch (JSchException e) {
+            number = -1;
+            log.error(ExceptionUtils.getStackTrace(e));
+        } catch (SftpException e) {
+            number = -1;
+            log.error(ExceptionUtils.getStackTrace(e));
+        } finally {
+            disconnect(session, channel, channelSftp);
+            if (number == -1) {
+                log.warn("host:{},port:{},username:{},path:{}", host, port, username, path);
+            }
+        }
+        return number;
     }
 
     private static void disconnect(Session session, Channel channel, ChannelSftp channelSftp) {
