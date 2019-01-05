@@ -14,6 +14,10 @@
 *   SELECT ABS(1.1); -- 1.1
 
 
+# 
+
+alter table tbl_name auto_increment = value;
+
 
 
 
