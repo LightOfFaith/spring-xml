@@ -18,6 +18,7 @@ public class RequestDataEncoder extends MessageToByteEncoder<RequestData> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, RequestData msg, ByteBuf out) throws Exception {
+        // ctx.alloc().buffer(4);
         String value = msg.getValue();
         byte[] src = value.getBytes();
         int length = src.length;
