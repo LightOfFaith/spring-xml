@@ -11,6 +11,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 public class NettyServer {
 
@@ -29,6 +31,7 @@ public class NettyServer {
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     public void initChannel(SocketChannel ch) throws Exception {
+                        ch.pipeline().addLast("logging", new LoggingHandler(LogLevel.TRACE));
                         ch.pipeline().addLast(new RequestDataDecoder(), new ResponseDataEncoder(),
                             new ProcessingHandler());
                     }

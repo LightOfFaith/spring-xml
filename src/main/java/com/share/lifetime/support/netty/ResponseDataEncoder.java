@@ -18,13 +18,11 @@ public class ResponseDataEncoder extends MessageToByteEncoder<ResponseData> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, ResponseData msg, ByteBuf out) throws Exception {
-        ByteBuf in = ctx.alloc().buffer(4);
         String value = msg.getValue();
         byte[] src = value.getBytes();
-        in.writeBytes(src);
         int length = src.length;
         out.writeInt(length);
-        out.writeCharSequence(msg.getValue(), charset);
+        out.writeCharSequence(value, charset);
     }
 
 }
