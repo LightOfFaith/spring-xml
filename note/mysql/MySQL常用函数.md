@@ -18,6 +18,13 @@
 
 alter table tbl_name auto_increment = value;
 
+alter table tbl_name add column gmt_create timestamp not null default current_timestamp;
+
+alter table tbl_name add column gmt_modify timestamp not null default current_timestamp on update current_timestamp;
+
+
+ALTER TABLE tbl_name CHANGE COLUMN old_col_name new_col_name BIGINT UNSIGNED NULL DEFAULT NULL ;
+
 
 
 
